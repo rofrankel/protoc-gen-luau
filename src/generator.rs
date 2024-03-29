@@ -227,55 +227,58 @@ pub fn file_path_export_name(path: &Path) -> String {
     )
 }
 
-const MESSAGE: &str = r#"<name> = {
-    new = function()
-        return {
-<default>
-        }
-    end,
+const MESSAGE: &str = r#"
+local <name>: proto.Message<_<name>Impl> = {} :: _<name>Impl
+<name>.__index = <name>
 
-    encode = function(self: <name>): buffer
-        local output = buffer.create(0)
-        local cursor = 0
+function <name>.new()
+    return setmetatable({
+<default>
+    }, <name>)
+end
+
+function <name>.encode(self: <name>): buffer
+    local output = buffer.create(0)
+    local cursor = 0
 
 <encode>
-        local shrunkBuffer = buffer.create(cursor)
-        buffer.copy(shrunkBuffer, 0, output, 0, cursor)
-        return shrunkBuffer
-    end,
+    local shrunkBuffer = buffer.create(cursor)
+    buffer.copy(shrunkBuffer, 0, output, 0, cursor)
+    return shrunkBuffer
+end
 
-    decode = function(input: buffer): <name>
-        local self = <name>.new()
-        local cursor = 0
+function <name>.decode(input: buffer): <name>
+    local self = <name>.new()
+    local cursor = 0
 
-        while cursor < buffer.len(input) do
-            local field, wireType
-            field, wireType, cursor = proto.readTag(input, cursor)
+    while cursor < buffer.len(input) do
+        local field, wireType
+        field, wireType, cursor = proto.readTag(input, cursor)
 
-            if wireType == proto.wireTypes.varint then
-                <decode_varint>
-            elseif wireType == proto.wireTypes.lengthDelimited then
-                <decode_len>
-            elseif wireType == proto.wireTypes.i32 then
-                <decode_i32>
-            elseif wireType == proto.wireTypes.i64 then
-                <decode_i64>
-            else
-                error("Unsupported wire type: " .. wireType)
-            end
+        if wireType == proto.wireTypes.varint then
+            <decode_varint>
+        elseif wireType == proto.wireTypes.lengthDelimited then
+            <decode_len>
+        elseif wireType == proto.wireTypes.i32 then
+            <decode_i32>
+        elseif wireType == proto.wireTypes.i64 then
+            <decode_i64>
+        else
+            error("Unsupported wire type: " .. wireType)
         end
-
-        return self
-    end,
-
-    jsonEncode = function(self: <name>): any
-        <json_encode>
-    end,
-
-    jsonDecode = function(input: { [string]: any }): <name>
-        <json_decode>
     end
-}"#;
+
+    return self
+end
+
+function <name>.jsonEncode(self: <name>): any
+    <json_encode>
+end
+
+function <name>.jsonDecode(input: { [string]: any }): <name>
+    <json_decode>
+end
+"#;
 
 const ENUM: &str = r#"<name> = {
     fromNumber = function(value: number): <name>?
@@ -482,9 +485,18 @@ impl<'a> FileGenerator<'a> {
             self.exports.push(name.clone());
         }
 
-        self.types
-            .push(format!("local {name}: proto.Message<{name}>"));
-        self.types.push(format!("export type {name} = {{"));
+        self.types.push(format!(r#"type _{name}Impl = {{
+                __index: _{name}Impl,
+                new: () -> {name},
+                encode: (self: {name}) -> string,
+                decode: (input: buffer) -> {name},
+                jsonEncode: (self: {name}) -> any,
+                jsonDecode: (input: {{ [string]: any }}) -> {name},
+            }}
+            "#));
+
+        self.types.push(format!(r#"export type {name} = typeof(setmetatable({{}} :: {{"#));
+
         self.types.indent();
 
         let mut json_type = StringBuilder::new();
@@ -604,7 +616,7 @@ impl<'a> FileGenerator<'a> {
         }
 
         self.types.dedent();
-        self.types.push("}");
+        self.types.push(format!("}}, {{}} :: _{name}Impl))"));
         self.types.blank();
 
         json_type.dedent();
