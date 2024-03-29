@@ -1,4 +1,6 @@
 --!strict
+local typeRegistry = require("./typeRegistry")
+
 local wktJson = {}
 
 export type WellKnownType<T, TSerialized> = {
@@ -291,5 +293,27 @@ wktJson.ListValue = {
 		})
 	end,
 } :: WellKnownType<ListValue, { any }>
+
+type Any = {
+	type_url: string,
+	value: buffer,
+}
+wktJson.Any = {
+	serialize = function(input: Any, registry: typeRegistry.TypeRegistry): { [string]: any }
+		local unpacked = input:unpack(registry)
+
+		unpacked["@type"] = input.type_url
+
+		return unpacked
+	end,
+
+	deserialize = function(input: { [string]: any }): Any
+		return {
+			type_url = input["@type"],
+			value = wktJson.Value.deserialize(input.value),
+		}
+	end,
+} :: WellKnownType<Any, { [string]: any }>
+
 
 return wktJson

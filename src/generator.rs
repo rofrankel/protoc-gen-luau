@@ -291,6 +291,8 @@ function <name>.jsonDecode(input: { [string]: any }): <name>
     <json_decode>
 end
 
+<any_methods>
+
 function <name>.descriptor() : descriptor.Descriptor
     local descriptor = descriptor.Descriptor.new()
     descriptor.name = function() return "<name>" end
@@ -312,6 +314,57 @@ const ENUM: &str = r#"<name> = {
         <from_name>
     end,
 }"#;
+
+const ANY_METHOD_SIGNATURES: &str = r#"
+-- Pack a message into the Any.
+--
+-- If typePrefix is not provided, defaults to "apis.roblox.com/cloud".
+pack: (self: Any, payload: Message, typePrefix: string?) -> (),
+
+-- Returns the message contained by the Any (or nil if the Any is empty).
+unpack: (self: Any) -> Message?,
+
+-- Returns true iff the Any contains an object of the type specified by
+-- typeName. If typeName is a full type URL, it will be compared; otherwise,
+-- only the type name will be compared.
+isA: (self: Any, typeName: string) -> boolean,
+"#;
+
+const ANY_METHODS: &str = r#"
+function <name>.pack(self: Any, payload: Message, typePrefix: string?) : ()
+    self.type_url = typePrefix or "apis.roblox.com/cloud" .. "/" .. payload.descriptor().full_name()
+    self.value = payload:encode()
+end
+
+function <name>.unpack(self: Any, registry: typeRegistry.TypeRegistry) : Message?
+    if self.value == nil then
+        return nil
+    end
+
+    local typeName = self.typeUrlToTypeName(self.type_url)
+    local payloadType = registry:findMessage(typeName)
+
+    if payloadType == nil then
+        return nil
+    end
+
+    return payloadType.decode(self.value)
+end
+
+function <name>.isA(self: Any, typeName: string) : boolean
+    if self.type_url == typeName then
+        return true
+    end
+
+    local suffix = "/" .. typeName
+    return self.type_url:sub(-#suffix) == suffix
+end
+
+function Any.typeUrlToTypeName(typeUrl: string) : string
+    local first, _ = typeUrl:find("([^/]+)$")
+    return typeUrl:sub(first)
+end
+"#;
 
 fn create_decoder(fields: BTreeMap<i32, String>) -> String {
     if fields.is_empty() {
@@ -368,6 +421,7 @@ impl<'a> FileGenerator<'a> {
     fn generate_file(mut self) -> File {
         let file_path = Path::new(self.file_descriptor_proto.name());
 
+
         let mut contents = StringBuilder::new();
         contents.push("--!strict");
         contents.push("--!nolint LocalUnused");
@@ -418,6 +472,21 @@ impl<'a> FileGenerator<'a> {
             "local descriptor = require({})",
             self.require_path(&descriptor_require_path)
         ));
+
+        if self.file_descriptor_proto.package() == "google.protobuf"
+            && self
+                .file_descriptor_proto
+                .message_type
+                .iter()
+                .any(|message| message.name() == "Any")
+        {
+            let mut type_registry_require_path = proto_require_path.clone();
+            type_registry_require_path.push("typeRegistry");
+            contents.push(format!(
+                "local typeRegistry = require({})",
+                self.require_path(&type_registry_require_path)
+            ));
+        }
 
         for import in &self.file_descriptor_proto.dependency {
             let path_diff = pathdiff::diff_paths(
@@ -518,6 +587,9 @@ impl<'a> FileGenerator<'a> {
         {
             self.exports.push(name.clone());
         }
+
+        let is_wkt_any =
+            self.file_descriptor_proto.package() == "google.protobuf" && message.name() == "Any";
 
         self.types.push(format!(
             r#"type _{name}Impl = {{
@@ -656,6 +728,9 @@ impl<'a> FileGenerator<'a> {
                 }
             }
         }
+        if is_wkt_any {
+            self.types.push(ANY_METHOD_SIGNATURES);
+        }
 
         self.types.dedent();
         self.types.push("}");
@@ -709,6 +784,11 @@ impl<'a> FileGenerator<'a> {
                     ),
                 )
         }
+
+        // Add special methods for google.protobuf.Any: pack, unpack, and isA.
+        let any_methods = ANY_METHODS.replace("<name>", &name);
+        final_code =
+            final_code.replace("<any_methods>", if is_wkt_any { &any_methods } else { "" });
 
         self.implementations.push(final_code);
         self.implementations.blank();
@@ -851,5 +931,6 @@ fn message_type_has_special_json(file: &FileDescriptorProto, message: &Descripto
                 | "Struct"
                 | "ListValue"
                 | "Timestamp"
+                | "Any"
         )
 }
