@@ -406,6 +406,7 @@ impl<'a> FileGenerator<'a> {
             ));
         }
 
+<<<<<<< HEAD
         let mut descriptor_require_path = proto_require_path.clone();
         descriptor_require_path.push("descriptor");
         contents.push(format!(
@@ -413,6 +414,8 @@ impl<'a> FileGenerator<'a> {
             self.require_path(&descriptor_require_path)
         ));
 
+=======
+>>>>>>> dfd8cca (Use POSIX paths for imports.)
         for import in &self.file_descriptor_proto.dependency {
             let path_diff = pathdiff::diff_paths(
                 StdPath::new(&import),
