@@ -231,7 +231,7 @@ const MESSAGE: &str = r#"
 local <name>: proto.Message<_<name>Impl> = {} :: _<name>Impl
 <name>.__index = <name>
 
-function <name>.new()
+function <name>.new(data: _<name>Fields?): <name>
     return setmetatable({
 <default>
     }, <name>)
@@ -485,7 +485,8 @@ impl<'a> FileGenerator<'a> {
             self.exports.push(name.clone());
         }
 
-        self.types.push(format!(r#"type _{name}Impl = {{
+        self.types.push(format!(
+            r#"type _{name}Impl = {{
                 __index: _{name}Impl,
                 new: () -> {name},
                 encode: (self: {name}) -> string,
@@ -493,9 +494,10 @@ impl<'a> FileGenerator<'a> {
                 jsonEncode: (self: {name}) -> any,
                 jsonDecode: (input: {{ [string]: any }}) -> {name},
             }}
-            "#));
+            "#
+        ));
 
-        self.types.push(format!(r#"export type {name} = typeof(setmetatable({{}} :: {{"#));
+        self.types.push(format!(r#"type _{name}Fields = {{"#));
 
         self.types.indent();
 
@@ -577,7 +579,12 @@ impl<'a> FileGenerator<'a> {
                 json_decode_lines.append(&mut field.json_decode());
             }
 
-            default_lines.push(format!("{} = {},", field.name(), field.default()));
+            default_lines.push(format!(
+                r#"{} = data and data["{}"] or {},"#,
+                field.name(),
+                field.name(),
+                field.default()
+            ));
 
             for inner_field in field.inner_fields() {
                 let output = &format!("self.{}", field.name());
@@ -616,8 +623,12 @@ impl<'a> FileGenerator<'a> {
         }
 
         self.types.dedent();
-        self.types.push(format!("}}, {{}} :: _{name}Impl))"));
+        self.types.push("}");
         self.types.blank();
+
+        self.types.push(format!(
+            r#"export type {name} = typeof(setmetatable({{}} :: _{name}Fields, {{}} :: _{name}Impl))"#
+        ));
 
         json_type.dedent();
         json_type.push("}");
