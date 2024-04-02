@@ -283,11 +283,11 @@ function <name>.decode(input: buffer): <name>
     return self
 end
 
-function <name>.jsonEncode(self: <name>): any
+function <name>.jsonEncode(self: <name>, options: proto.JsonEncodingOptions?): any
     <json_encode>
 end
 
-function <name>.jsonDecode(input: { [string]: any }): <name>
+function <name>.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): <name>
     <json_decode>
 end
 
@@ -345,7 +345,7 @@ function <name>.unpack(self: Any, registry: typeRegistry.TypeRegistry) : Message
     local payloadType = registry:findMessage(typeName)
 
     if payloadType == nil then
-        return nil
+        error('Unknown type: ' .. typeName)
     end
 
     return payloadType.decode(self.value)
@@ -597,8 +597,8 @@ impl<'a> FileGenerator<'a> {
                 new: () -> {name},
                 encode: (self: {name}) -> string,
                 decode: (input: buffer) -> {name},
-                jsonEncode: (self: {name}) -> any,
-                jsonDecode: (input: {{ [string]: any }}) -> {name},
+                jsonEncode: (self: {name}, options: proto.JsonEncodingOptions?) -> any,
+                jsonDecode: (input: {{ [string]: any }}, options: proto.JsonDecodingOptions?) -> {name},
                 descriptor: () -> descriptor.Descriptor,
             }}
             "#
@@ -760,11 +760,11 @@ impl<'a> FileGenerator<'a> {
             final_code = final_code
                 .replace(
                     "<json_encode>",
-                    &format!("return {wkt_json_namespace}.serialize(self :: any)"),
+                    &format!("return {wkt_json_namespace}.serialize(self :: any, options)"),
                 )
                 .replace(
                     "<json_decode>",
-                    &format!("return {wkt_json_namespace}.deserialize(input :: any, {name}.new) -- any cast because we have a special jsonDecode"),
+                    &format!("return {wkt_json_namespace}.deserialize(input :: any, {name}.new, options) -- any cast because we have a special jsonDecode"),
                 );
         } else {
             final_code = final_code
