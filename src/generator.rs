@@ -653,7 +653,7 @@ impl<'a> FileGenerator<'a> {
                 )
                 .replace(
                     "<json_decode>",
-                    &format!("return {wkt_json_namespace}.deserialize(input :: any) -- any cast because we have a special jsonDecode"),
+                    &format!("return {wkt_json_namespace}.deserialize(input :: any, {name}.new) -- any cast because we have a special jsonDecode"),
                 );
         } else {
             final_code = final_code
