@@ -813,6 +813,7 @@ fn message_type_has_special_json(file: &FileDescriptorProto, message: &Descripto
                 | "BoolValue"
                 | "BytesValue"
                 | "DoubleValue"
+                | "FieldMask"
                 | "FloatValue"
                 | "Int32Value"
                 | "Int64Value"
