@@ -11,8 +11,8 @@ type _TimestampImpl = {
 	new: () -> Timestamp,
 	encode: (self: Timestamp) -> string,
 	decode: (input: buffer) -> Timestamp,
-	jsonEncode: (self: Timestamp) -> any,
-	jsonDecode: (input: { [string]: any }) -> Timestamp,
+	jsonEncode: (self: Timestamp, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> Timestamp,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -84,12 +84,12 @@ function Timestamp.decode(input: buffer): Timestamp
 	return self
 end
 
-function Timestamp.jsonEncode(self: Timestamp): any
-	return wktJson.Timestamp.serialize(self :: any)
+function Timestamp.jsonEncode(self: Timestamp, options: proto.JsonEncodingOptions?): any
+	return wktJson.Timestamp.serialize(self :: any, options)
 end
 
-function Timestamp.jsonDecode(input: { [string]: any }): Timestamp
-	return wktJson.Timestamp.deserialize(input :: any, Timestamp.new) -- any cast because we have a special jsonDecode
+function Timestamp.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): Timestamp
+	return wktJson.Timestamp.deserialize(input :: any, Timestamp.new, options) -- any cast because we have a special jsonDecode
 end
 
 function Timestamp.descriptor(): descriptor.Descriptor

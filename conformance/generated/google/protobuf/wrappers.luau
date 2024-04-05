@@ -11,8 +11,8 @@ type _DoubleValueImpl = {
 	new: () -> DoubleValue,
 	encode: (self: DoubleValue) -> string,
 	decode: (input: buffer) -> DoubleValue,
-	jsonEncode: (self: DoubleValue) -> any,
-	jsonDecode: (input: { [string]: any }) -> DoubleValue,
+	jsonEncode: (self: DoubleValue, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> DoubleValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -26,8 +26,8 @@ type _FloatValueImpl = {
 	new: () -> FloatValue,
 	encode: (self: FloatValue) -> string,
 	decode: (input: buffer) -> FloatValue,
-	jsonEncode: (self: FloatValue) -> any,
-	jsonDecode: (input: { [string]: any }) -> FloatValue,
+	jsonEncode: (self: FloatValue, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> FloatValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -41,8 +41,8 @@ type _Int64ValueImpl = {
 	new: () -> Int64Value,
 	encode: (self: Int64Value) -> string,
 	decode: (input: buffer) -> Int64Value,
-	jsonEncode: (self: Int64Value) -> any,
-	jsonDecode: (input: { [string]: any }) -> Int64Value,
+	jsonEncode: (self: Int64Value, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> Int64Value,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -56,8 +56,8 @@ type _UInt64ValueImpl = {
 	new: () -> UInt64Value,
 	encode: (self: UInt64Value) -> string,
 	decode: (input: buffer) -> UInt64Value,
-	jsonEncode: (self: UInt64Value) -> any,
-	jsonDecode: (input: { [string]: any }) -> UInt64Value,
+	jsonEncode: (self: UInt64Value, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> UInt64Value,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -71,8 +71,8 @@ type _Int32ValueImpl = {
 	new: () -> Int32Value,
 	encode: (self: Int32Value) -> string,
 	decode: (input: buffer) -> Int32Value,
-	jsonEncode: (self: Int32Value) -> any,
-	jsonDecode: (input: { [string]: any }) -> Int32Value,
+	jsonEncode: (self: Int32Value, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> Int32Value,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -86,8 +86,8 @@ type _UInt32ValueImpl = {
 	new: () -> UInt32Value,
 	encode: (self: UInt32Value) -> string,
 	decode: (input: buffer) -> UInt32Value,
-	jsonEncode: (self: UInt32Value) -> any,
-	jsonDecode: (input: { [string]: any }) -> UInt32Value,
+	jsonEncode: (self: UInt32Value, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> UInt32Value,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -101,8 +101,8 @@ type _BoolValueImpl = {
 	new: () -> BoolValue,
 	encode: (self: BoolValue) -> string,
 	decode: (input: buffer) -> BoolValue,
-	jsonEncode: (self: BoolValue) -> any,
-	jsonDecode: (input: { [string]: any }) -> BoolValue,
+	jsonEncode: (self: BoolValue, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> BoolValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -116,8 +116,8 @@ type _StringValueImpl = {
 	new: () -> StringValue,
 	encode: (self: StringValue) -> string,
 	decode: (input: buffer) -> StringValue,
-	jsonEncode: (self: StringValue) -> any,
-	jsonDecode: (input: { [string]: any }) -> StringValue,
+	jsonEncode: (self: StringValue, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> StringValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -131,8 +131,8 @@ type _BytesValueImpl = {
 	new: () -> BytesValue,
 	encode: (self: BytesValue) -> string,
 	decode: (input: buffer) -> BytesValue,
-	jsonEncode: (self: BytesValue) -> any,
-	jsonDecode: (input: { [string]: any }) -> BytesValue,
+	jsonEncode: (self: BytesValue, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> BytesValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -193,12 +193,12 @@ function DoubleValue.decode(input: buffer): DoubleValue
 	return self
 end
 
-function DoubleValue.jsonEncode(self: DoubleValue): any
-	return wktJson.DoubleValue.serialize(self :: any)
+function DoubleValue.jsonEncode(self: DoubleValue, options: proto.JsonEncodingOptions?): any
+	return wktJson.DoubleValue.serialize(self :: any, options)
 end
 
-function DoubleValue.jsonDecode(input: { [string]: any }): DoubleValue
-	return wktJson.DoubleValue.deserialize(input :: any, DoubleValue.new) -- any cast because we have a special jsonDecode
+function DoubleValue.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): DoubleValue
+	return wktJson.DoubleValue.deserialize(input :: any, DoubleValue.new, options) -- any cast because we have a special jsonDecode
 end
 
 function DoubleValue.descriptor(): descriptor.Descriptor
@@ -263,12 +263,12 @@ function FloatValue.decode(input: buffer): FloatValue
 	return self
 end
 
-function FloatValue.jsonEncode(self: FloatValue): any
-	return wktJson.FloatValue.serialize(self :: any)
+function FloatValue.jsonEncode(self: FloatValue, options: proto.JsonEncodingOptions?): any
+	return wktJson.FloatValue.serialize(self :: any, options)
 end
 
-function FloatValue.jsonDecode(input: { [string]: any }): FloatValue
-	return wktJson.FloatValue.deserialize(input :: any, FloatValue.new) -- any cast because we have a special jsonDecode
+function FloatValue.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): FloatValue
+	return wktJson.FloatValue.deserialize(input :: any, FloatValue.new, options) -- any cast because we have a special jsonDecode
 end
 
 function FloatValue.descriptor(): descriptor.Descriptor
@@ -333,12 +333,12 @@ function Int64Value.decode(input: buffer): Int64Value
 	return self
 end
 
-function Int64Value.jsonEncode(self: Int64Value): any
-	return wktJson.Int64Value.serialize(self :: any)
+function Int64Value.jsonEncode(self: Int64Value, options: proto.JsonEncodingOptions?): any
+	return wktJson.Int64Value.serialize(self :: any, options)
 end
 
-function Int64Value.jsonDecode(input: { [string]: any }): Int64Value
-	return wktJson.Int64Value.deserialize(input :: any, Int64Value.new) -- any cast because we have a special jsonDecode
+function Int64Value.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): Int64Value
+	return wktJson.Int64Value.deserialize(input :: any, Int64Value.new, options) -- any cast because we have a special jsonDecode
 end
 
 function Int64Value.descriptor(): descriptor.Descriptor
@@ -403,12 +403,12 @@ function UInt64Value.decode(input: buffer): UInt64Value
 	return self
 end
 
-function UInt64Value.jsonEncode(self: UInt64Value): any
-	return wktJson.UInt64Value.serialize(self :: any)
+function UInt64Value.jsonEncode(self: UInt64Value, options: proto.JsonEncodingOptions?): any
+	return wktJson.UInt64Value.serialize(self :: any, options)
 end
 
-function UInt64Value.jsonDecode(input: { [string]: any }): UInt64Value
-	return wktJson.UInt64Value.deserialize(input :: any, UInt64Value.new) -- any cast because we have a special jsonDecode
+function UInt64Value.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): UInt64Value
+	return wktJson.UInt64Value.deserialize(input :: any, UInt64Value.new, options) -- any cast because we have a special jsonDecode
 end
 
 function UInt64Value.descriptor(): descriptor.Descriptor
@@ -473,12 +473,12 @@ function Int32Value.decode(input: buffer): Int32Value
 	return self
 end
 
-function Int32Value.jsonEncode(self: Int32Value): any
-	return wktJson.Int32Value.serialize(self :: any)
+function Int32Value.jsonEncode(self: Int32Value, options: proto.JsonEncodingOptions?): any
+	return wktJson.Int32Value.serialize(self :: any, options)
 end
 
-function Int32Value.jsonDecode(input: { [string]: any }): Int32Value
-	return wktJson.Int32Value.deserialize(input :: any, Int32Value.new) -- any cast because we have a special jsonDecode
+function Int32Value.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): Int32Value
+	return wktJson.Int32Value.deserialize(input :: any, Int32Value.new, options) -- any cast because we have a special jsonDecode
 end
 
 function Int32Value.descriptor(): descriptor.Descriptor
@@ -543,12 +543,12 @@ function UInt32Value.decode(input: buffer): UInt32Value
 	return self
 end
 
-function UInt32Value.jsonEncode(self: UInt32Value): any
-	return wktJson.UInt32Value.serialize(self :: any)
+function UInt32Value.jsonEncode(self: UInt32Value, options: proto.JsonEncodingOptions?): any
+	return wktJson.UInt32Value.serialize(self :: any, options)
 end
 
-function UInt32Value.jsonDecode(input: { [string]: any }): UInt32Value
-	return wktJson.UInt32Value.deserialize(input :: any, UInt32Value.new) -- any cast because we have a special jsonDecode
+function UInt32Value.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): UInt32Value
+	return wktJson.UInt32Value.deserialize(input :: any, UInt32Value.new, options) -- any cast because we have a special jsonDecode
 end
 
 function UInt32Value.descriptor(): descriptor.Descriptor
@@ -613,12 +613,12 @@ function BoolValue.decode(input: buffer): BoolValue
 	return self
 end
 
-function BoolValue.jsonEncode(self: BoolValue): any
-	return wktJson.BoolValue.serialize(self :: any)
+function BoolValue.jsonEncode(self: BoolValue, options: proto.JsonEncodingOptions?): any
+	return wktJson.BoolValue.serialize(self :: any, options)
 end
 
-function BoolValue.jsonDecode(input: { [string]: any }): BoolValue
-	return wktJson.BoolValue.deserialize(input :: any, BoolValue.new) -- any cast because we have a special jsonDecode
+function BoolValue.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): BoolValue
+	return wktJson.BoolValue.deserialize(input :: any, BoolValue.new, options) -- any cast because we have a special jsonDecode
 end
 
 function BoolValue.descriptor(): descriptor.Descriptor
@@ -683,12 +683,12 @@ function StringValue.decode(input: buffer): StringValue
 	return self
 end
 
-function StringValue.jsonEncode(self: StringValue): any
-	return wktJson.StringValue.serialize(self :: any)
+function StringValue.jsonEncode(self: StringValue, options: proto.JsonEncodingOptions?): any
+	return wktJson.StringValue.serialize(self :: any, options)
 end
 
-function StringValue.jsonDecode(input: { [string]: any }): StringValue
-	return wktJson.StringValue.deserialize(input :: any, StringValue.new) -- any cast because we have a special jsonDecode
+function StringValue.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): StringValue
+	return wktJson.StringValue.deserialize(input :: any, StringValue.new, options) -- any cast because we have a special jsonDecode
 end
 
 function StringValue.descriptor(): descriptor.Descriptor
@@ -753,12 +753,12 @@ function BytesValue.decode(input: buffer): BytesValue
 	return self
 end
 
-function BytesValue.jsonEncode(self: BytesValue): any
-	return wktJson.BytesValue.serialize(self :: any)
+function BytesValue.jsonEncode(self: BytesValue, options: proto.JsonEncodingOptions?): any
+	return wktJson.BytesValue.serialize(self :: any, options)
 end
 
-function BytesValue.jsonDecode(input: { [string]: any }): BytesValue
-	return wktJson.BytesValue.deserialize(input :: any, BytesValue.new) -- any cast because we have a special jsonDecode
+function BytesValue.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): BytesValue
+	return wktJson.BytesValue.deserialize(input :: any, BytesValue.new, options) -- any cast because we have a special jsonDecode
 end
 
 function BytesValue.descriptor(): descriptor.Descriptor

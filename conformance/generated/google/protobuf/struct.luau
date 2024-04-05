@@ -11,8 +11,8 @@ type _StructImpl = {
 	new: () -> Struct,
 	encode: (self: Struct) -> string,
 	decode: (input: buffer) -> Struct,
-	jsonEncode: (self: Struct) -> any,
-	jsonDecode: (input: { [string]: any }) -> Struct,
+	jsonEncode: (self: Struct, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> Struct,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -26,8 +26,8 @@ type _Struct_FieldsEntryImpl = {
 	new: () -> Struct_FieldsEntry,
 	encode: (self: Struct_FieldsEntry) -> string,
 	decode: (input: buffer) -> Struct_FieldsEntry,
-	jsonEncode: (self: Struct_FieldsEntry) -> any,
-	jsonDecode: (input: { [string]: any }) -> Struct_FieldsEntry,
+	jsonEncode: (self: Struct_FieldsEntry, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> Struct_FieldsEntry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -42,8 +42,8 @@ type _ValueImpl = {
 	new: () -> Value,
 	encode: (self: Value) -> string,
 	decode: (input: buffer) -> Value,
-	jsonEncode: (self: Value) -> any,
-	jsonDecode: (input: { [string]: any }) -> Value,
+	jsonEncode: (self: Value, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> Value,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -64,8 +64,8 @@ type _ListValueImpl = {
 	new: () -> ListValue,
 	encode: (self: ListValue) -> string,
 	decode: (input: buffer) -> ListValue,
-	jsonEncode: (self: ListValue) -> any,
-	jsonDecode: (input: { [string]: any }) -> ListValue,
+	jsonEncode: (self: ListValue, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> ListValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -143,12 +143,12 @@ function Struct.decode(input: buffer): Struct
 	return self
 end
 
-function Struct.jsonEncode(self: Struct): any
-	return wktJson.Struct.serialize(self :: any)
+function Struct.jsonEncode(self: Struct, options: proto.JsonEncodingOptions?): any
+	return wktJson.Struct.serialize(self :: any, options)
 end
 
-function Struct.jsonDecode(input: { [string]: any }): Struct
-	return wktJson.Struct.deserialize(input :: any, Struct.new) -- any cast because we have a special jsonDecode
+function Struct.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): Struct
+	return wktJson.Struct.deserialize(input :: any, Struct.new, options) -- any cast because we have a special jsonDecode
 end
 
 function Struct.descriptor(): descriptor.Descriptor
@@ -224,7 +224,7 @@ function Struct_FieldsEntry.decode(input: buffer): Struct_FieldsEntry
 	return self
 end
 
-function Struct_FieldsEntry.jsonEncode(self: Struct_FieldsEntry): any
+function Struct_FieldsEntry.jsonEncode(self: Struct_FieldsEntry, options: proto.JsonEncodingOptions?): any
 	local output: {
 		key: string?,
 		value: Value?,
@@ -241,7 +241,10 @@ function Struct_FieldsEntry.jsonEncode(self: Struct_FieldsEntry): any
 	return output
 end
 
-function Struct_FieldsEntry.jsonDecode(input: { [string]: any }): Struct_FieldsEntry
+function Struct_FieldsEntry.jsonDecode(
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
+): Struct_FieldsEntry
 	local self = Struct_FieldsEntry.new()
 
 	if input.key ~= nil then
@@ -356,12 +359,12 @@ function Value.decode(input: buffer): Value
 	return self
 end
 
-function Value.jsonEncode(self: Value): any
-	return wktJson.Value.serialize(self :: any)
+function Value.jsonEncode(self: Value, options: proto.JsonEncodingOptions?): any
+	return wktJson.Value.serialize(self :: any, options)
 end
 
-function Value.jsonDecode(input: { [string]: any }): Value
-	return wktJson.Value.deserialize(input :: any, Value.new) -- any cast because we have a special jsonDecode
+function Value.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): Value
+	return wktJson.Value.deserialize(input :: any, Value.new, options) -- any cast because we have a special jsonDecode
 end
 
 function Value.descriptor(): descriptor.Descriptor
@@ -429,12 +432,12 @@ function ListValue.decode(input: buffer): ListValue
 	return self
 end
 
-function ListValue.jsonEncode(self: ListValue): any
-	return wktJson.ListValue.serialize(self :: any)
+function ListValue.jsonEncode(self: ListValue, options: proto.JsonEncodingOptions?): any
+	return wktJson.ListValue.serialize(self :: any, options)
 end
 
-function ListValue.jsonDecode(input: { [string]: any }): ListValue
-	return wktJson.ListValue.deserialize(input :: any, ListValue.new) -- any cast because we have a special jsonDecode
+function ListValue.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): ListValue
+	return wktJson.ListValue.deserialize(input :: any, ListValue.new, options) -- any cast because we have a special jsonDecode
 end
 
 function ListValue.descriptor(): descriptor.Descriptor
