@@ -292,4 +292,24 @@ wktJson.ListValue = {
 	end,
 } :: WellKnownType<ListValue, { any }>
 
+type FieldMask = {
+	paths: { string },
+}
+wktJson.FieldMask = {
+	serialize = function(fieldMask: FieldMask): string
+		return table.concat(fieldMask.paths, ",")
+	end,
+
+	deserialize = function<M>(input: string, new: (FieldMask) -> M): M
+		local paths = {}
+		for path in string.gmatch(input, "[^,]+") do
+			table.insert(paths, path)
+		end
+
+		return new({
+			paths = paths,
+		})
+	end,
+} :: WellKnownType<FieldMask, string>
+
 return wktJson
