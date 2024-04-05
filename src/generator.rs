@@ -72,6 +72,12 @@ pub fn generate_response(request: CodeGeneratorRequest) -> CodeGeneratorResponse
         ..Default::default()
     });
 
+    files.push(File {
+        name: Some("proto/typeRegistry.luau".to_owned()),
+        content: Some(include_str!("./luau/proto/typeRegistry.luau").to_owned()),
+        ..Default::default()
+    });
+
     files.append(
         &mut request
             .proto_file
