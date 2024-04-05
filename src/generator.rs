@@ -72,6 +72,12 @@ pub fn generate_response(request: CodeGeneratorRequest) -> CodeGeneratorResponse
         ..Default::default()
     });
 
+    files.push(File {
+        name: Some("proto/typeRegistry.luau".to_owned()),
+        content: Some(include_str!("./luau/proto/typeRegistry.luau").to_owned()),
+        ..Default::default()
+    });
+
     files.append(
         &mut request
             .proto_file
@@ -273,13 +279,15 @@ function <name>.decode(input: buffer): <name>
     return self
 end
 
-function <name>.jsonEncode(self: <name>): any
+function <name>.jsonEncode(self: <name>, options: proto.JsonEncodingOptions?): any
     <json_encode>
 end
 
-function <name>.jsonDecode(input: { [string]: any }): <name>
+function <name>.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): <name>
     <json_decode>
 end
+
+<any_methods>
 
 function <name>.descriptor() : descriptor.Descriptor
     local descriptor = descriptor.Descriptor.new()
@@ -302,6 +310,57 @@ const ENUM: &str = r#"<name> = {
         <from_name>
     end,
 }"#;
+
+const ANY_METHOD_SIGNATURES: &str = r#"
+-- Pack a message into the Any.
+--
+-- If typePrefix is not provided, defaults to "apis.roblox.com/cloud".
+pack: (self: Any, payload: Message, typePrefix: string?) -> (),
+
+-- Returns the message contained by the Any (or nil if the Any is empty).
+unpack: (self: Any) -> Message?,
+
+-- Returns true iff the Any contains an object of the type specified by
+-- typeName. If typeName is a full type URL, it will be compared; otherwise,
+-- only the type name will be compared.
+isA: (self: Any, typeName: string) -> boolean,
+"#;
+
+const ANY_METHODS: &str = r#"
+function <name>.pack(self: Any, payload: Message, typePrefix: string?) : ()
+    self.type_url = typePrefix or "apis.roblox.com/cloud" .. "/" .. payload.descriptor().full_name()
+    self.value = payload:encode()
+end
+
+function <name>.unpack(self: Any, registry: typeRegistry.TypeRegistry) : Message?
+    if self.value == nil then
+        return nil
+    end
+
+    local typeName = self.typeUrlToTypeName(self.type_url)
+    local payloadType = registry:findMessage(typeName)
+
+    if payloadType == nil then
+        error('Unknown type: ' .. typeName)
+    end
+
+    return payloadType.decode(self.value)
+end
+
+function <name>.isA(self: Any, typeName: string) : boolean
+    if self.type_url == typeName then
+        return true
+    end
+
+    local suffix = "/" .. typeName
+    return self.type_url:sub(-#suffix) == suffix
+end
+
+function Any.typeUrlToTypeName(typeUrl: string) : string
+    local first, _ = typeUrl:find("([^/]+)$")
+    return typeUrl:sub(first)
+end
+"#;
 
 fn create_decoder(fields: BTreeMap<i32, String>) -> String {
     if fields.is_empty() {
@@ -409,6 +468,21 @@ impl<'a> FileGenerator<'a> {
             self.require_path(&descriptor_require_path)
         ));
 
+        if self.file_descriptor_proto.package() == "google.protobuf"
+            && self
+                .file_descriptor_proto
+                .message_type
+                .iter()
+                .any(|message| message.name() == "Any")
+        {
+            let mut type_registry_require_path = proto_require_path.clone();
+            type_registry_require_path.push("typeRegistry");
+            contents.push(format!(
+                "local typeRegistry = require({})",
+                self.require_path(&type_registry_require_path)
+            ));
+        }
+
         for import in &self.file_descriptor_proto.dependency {
             let path_diff = pathdiff::diff_paths(
                 std::path::Path::new(&import),
@@ -509,14 +583,17 @@ impl<'a> FileGenerator<'a> {
             self.exports.push(name.clone());
         }
 
+        let is_wkt_any =
+            self.file_descriptor_proto.package() == "google.protobuf" && message.name() == "Any";
+
         self.types.push(format!(
             r#"type _{name}Impl = {{
                 __index: _{name}Impl,
                 new: () -> {name},
                 encode: (self: {name}) -> string,
                 decode: (input: buffer) -> {name},
-                jsonEncode: (self: {name}) -> any,
-                jsonDecode: (input: {{ [string]: any }}) -> {name},
+                jsonEncode: (self: {name}, options: proto.JsonEncodingOptions?) -> any,
+                jsonDecode: (input: {{ [string]: any }}, options: proto.JsonDecodingOptions?) -> {name},
                 descriptor: () -> descriptor.Descriptor,
             }}
             "#
@@ -646,6 +723,9 @@ impl<'a> FileGenerator<'a> {
                 }
             }
         }
+        if is_wkt_any {
+            self.types.push(ANY_METHOD_SIGNATURES);
+        }
 
         self.types.dedent();
         self.types.push("}");
@@ -675,11 +755,11 @@ impl<'a> FileGenerator<'a> {
             final_code = final_code
                 .replace(
                     "<json_encode>",
-                    &format!("return {wkt_json_namespace}.serialize(self :: any)"),
+                    &format!("return {wkt_json_namespace}.serialize(self :: any, options)"),
                 )
                 .replace(
                     "<json_decode>",
-                    &format!("return {wkt_json_namespace}.deserialize(input :: any, {name}.new) -- any cast because we have a special jsonDecode"),
+                    &format!("return {wkt_json_namespace}.deserialize(input :: any, {name}.new, options) -- any cast because we have a special jsonDecode"),
                 );
         } else {
             final_code = final_code
@@ -699,6 +779,11 @@ impl<'a> FileGenerator<'a> {
                     ),
                 )
         }
+
+        // Add special methods for google.protobuf.Any: pack, unpack, and isA.
+        let any_methods = ANY_METHODS.replace("<name>", &name);
+        final_code =
+            final_code.replace("<any_methods>", if is_wkt_any { &any_methods } else { "" });
 
         self.implementations.push(final_code);
         self.implementations.blank();
@@ -841,5 +926,6 @@ fn message_type_has_special_json(file: &FileDescriptorProto, message: &Descripto
                 | "Struct"
                 | "ListValue"
                 | "Timestamp"
+                | "Any"
         )
 }

@@ -11,8 +11,8 @@ type _DurationImpl = {
 	new: () -> Duration,
 	encode: (self: Duration) -> string,
 	decode: (input: buffer) -> Duration,
-	jsonEncode: (self: Duration) -> any,
-	jsonDecode: (input: { [string]: any }) -> Duration,
+	jsonEncode: (self: Duration, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> Duration,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -84,12 +84,12 @@ function Duration.decode(input: buffer): Duration
 	return self
 end
 
-function Duration.jsonEncode(self: Duration): any
-	return wktJson.Duration.serialize(self :: any)
+function Duration.jsonEncode(self: Duration, options: proto.JsonEncodingOptions?): any
+	return wktJson.Duration.serialize(self :: any, options)
 end
 
-function Duration.jsonDecode(input: { [string]: any }): Duration
-	return wktJson.Duration.deserialize(input :: any, Duration.new) -- any cast because we have a special jsonDecode
+function Duration.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): Duration
+	return wktJson.Duration.deserialize(input :: any, Duration.new, options) -- any cast because we have a special jsonDecode
 end
 
 function Duration.descriptor(): descriptor.Descriptor
