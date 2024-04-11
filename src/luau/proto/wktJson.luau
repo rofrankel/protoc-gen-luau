@@ -1,9 +1,18 @@
 --!strict
+-- local any = any or require("../google/protobuf/any")
+local duration = duration or require("../google/protobuf/duration")
+local field_mask = field_mask or require("../google/protobuf/field_mask")
+local struct = struct or require("../google/protobuf/struct")
+
+local timestamp = timestamp or require("../google/protobuf/timestamp")
+local wrappers = wrappers or require("../google/protobuf/wrappers")
+
+
 local wktJson = {}
 
 export type WellKnownType<T, TSerialized> = {
 	serialize: (T) -> TSerialized,
-	deserialize: (TSerialized) -> T,
+	deserialize: (TSerialized) -> Message,
 }
 
 local function serializeFractionalNanos(nanos: number): string
@@ -49,7 +58,7 @@ wktJson.Duration = {
 		return string.format("%s%d%s", nanoSign, duration.seconds or 0, serializeFractionalNanos(duration.nanos))
 	end,
 
-	deserialize = function(durationString: string): Duration
+	deserialize = function(durationString: string): duration.Duration
 		local simpleSecondsText = string.match(durationString, "^([%-0-9]+)s$")
 		if simpleSecondsText ~= nil then
 			local simpleSeconds = assert(
@@ -57,10 +66,10 @@ wktJson.Duration = {
 				"Invalid duration string received--was formatted as just having seconds, but wasn't a properly formatted int"
 			)
 
-			return {
+			return duration.Duration.new({
 				seconds = simpleSeconds,
 				nanos = 0,
-			}
+			})
 		end
 
 		local secondsText, nanosText = string.match(durationString, "^([%-0-9]+)%.([0-9]+)s$")
@@ -94,7 +103,7 @@ wktJson.Timestamp = {
 		)
 	end,
 
-	deserialize = function(text: string): Timestamp
+	deserialize = function(text: string): timestamp.Timestamp
 		local year, month, day, hour, min, sec, nanosWithDot =
 			string.match(text, "^([0-9]+)-([0-9]+)-([0-9]+)T([0-9]+):([0-9]+):([0-9]+)(.*)Z$")
 
@@ -129,37 +138,37 @@ wktJson.Timestamp = {
 			sec = assert(tonumber(sec), "Invalid formatted sec"),
 		})
 
-		return {
+		return timestamp.Timestamp.new({
 			seconds = totalSeconds,
 			nanos = nanos,
-		}
+		})
 	end,
 } :: WellKnownType<Timestamp, string>
 
-type RawValue<T> = WellKnownType<{ value: T }, T>
-local function createRawValue<T>(): RawValue<T>
+type RawValue<T, M> = WellKnownType<{ value: T }, T>
+local function createRawValue<T, M>(new: (T) -> M): RawValue<T, M>
 	return {
 		serialize = function(input: { value: T }): T
 			return input.value
 		end,
 
-		deserialize = function(value: T): { value: T }
-			return {
+		deserialize = function(value: T): M
+			return new({
 				value = value,
-			}
+			})
 		end,
 	}
 end
 
-wktJson.BoolValue = createRawValue() :: RawValue<boolean>
-wktJson.BytesValue = createRawValue() :: RawValue<buffer>
-wktJson.DoubleValue = createRawValue() :: RawValue<number>
-wktJson.FloatValue = createRawValue() :: RawValue<number>
-wktJson.Int32Value = createRawValue() :: RawValue<number>
-wktJson.Int64Value = createRawValue() :: RawValue<number>
-wktJson.UInt32Value = createRawValue() :: RawValue<number>
-wktJson.UInt64Value = createRawValue() :: RawValue<number>
-wktJson.StringValue = createRawValue() :: RawValue<string>
+wktJson.BoolValue = createRawValue(wrappers.BoolValue.new) :: RawValue<boolean, wrappers.BoolValue>
+wktJson.BytesValue = createRawValue(wrappers.BytesValue.new) :: RawValue<buffer, wrappers.BytesValue>
+wktJson.DoubleValue = createRawValue(wrappers.DoubleValue.new) :: RawValue<number, wrappers.DoubleValue>
+wktJson.FloatValue = createRawValue(wrappers.FloatValue.new) :: RawValue<number, wrappers.FloatValue>
+wktJson.Int32Value = createRawValue(wrappers.Int32Value.new) :: RawValue<number, wrappers.Int32Value>
+wktJson.Int64Value = createRawValue(wrappers.Int64Value.new) :: RawValue<number, wrappers.Int64Value>
+wktJson.UInt32Value = createRawValue(wrappers.UInt32Value.new) :: RawValue<number, wrappers.UInt32Value>
+wktJson.UInt64Value = createRawValue(wrappers.UInt64Value.new) :: RawValue<number, wrappers.UInt64Value>
+wktJson.StringValue = createRawValue(wrappers.StringValue.new) :: RawValue<string, wrappers.StringValue>
 
 type NullValue = "NULL_VALUE" | number
 wktJson.NullValue = {
@@ -205,15 +214,15 @@ wktJson.Value = {
 		end
 	end,
 
-	deserialize = function(input: any): Value
+	deserialize = function<M>(input: any): struct.Value
 		if input == nil then
-			return { kind = { type = "null_value", value = "NULL_VALUE" } }
+			return struct.Value.new({ kind = { type = "null_value", value = "NULL_VALUE" } })
 		elseif typeof(input) == "number" then
-			return { kind = { type = "number_value", value = input } }
+			return struct.Value.new({ kind = { type = "number_value", value = input } })
 		elseif typeof(input) == "string" then
-			return { kind = { type = "string_value", value = input } }
+			return struct.Value.new({ kind = { type = "string_value", value = input } })
 		elseif typeof(input) == "boolean" then
-			return { kind = { type = "bool_value", value = input } }
+			return struct.Value.new({ kind = { type = "bool_value", value = input } })
 		elseif typeof(input) == "table" then
 			local isArray = true
 			local count = 0
@@ -228,9 +237,9 @@ wktJson.Value = {
 			isArray = count == #input
 
 			if isArray then
-				return { kind = { type = "list_value", value = wktJson.ListValue.deserialize(input) } }
+				return struct.Value.new({ kind = { type = "list_value", value = wktJson.ListValue.deserialize(input) } })
 			else
-				return { kind = { type = "struct_value", value = wktJson.Struct.deserialize(input) } }
+				return struct.Value.new({ kind = { type = "struct_value", value = wktJson.Struct.deserialize(input) } })
 			end
 		else
 			error(`Unknown input type: {typeof(input)}`)
@@ -252,16 +261,16 @@ wktJson.Struct = {
 		return serialized
 	end,
 
-	deserialize = function(input: { [string]: any }): Struct
+	deserialize = function(input: { [string]: any }): struct.Struct
 		local fields = {}
 
 		for key, serializedValue in input do
 			fields[key] = wktJson.Value.deserialize(serializedValue)
 		end
 
-		return {
+		return struct.Struct.new({
 			fields = fields,
-		}
+		})
 	end,
 }
 
@@ -279,16 +288,16 @@ wktJson.ListValue = {
 		return serialized
 	end,
 
-	deserialize = function(input: { any }): ListValue
+	deserialize = function<M>(input: { any }): struct.ListValue
 		local values = {}
 
 		for _, value in input do
 			table.insert(values, wktJson.Value.deserialize(value))
 		end
 
-		return {
+		return struct.ListValue.new({
 			values = values,
-		}
+		})
 	end,
 } :: WellKnownType<ListValue, { any }>
 
