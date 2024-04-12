@@ -276,14 +276,16 @@ function <name>.descriptor() : descriptor.Descriptor
     descriptor.full_name = function() return "<full_name>" end
     return descriptor
 end
+
+<any_methods>
 "#;
 
 const JSON: &str = r#"
-function <name>.jsonEncode(self: <name>): any
+function <name>.jsonEncode(self: <name>, options: proto.JsonEncodingOptions?): any
     <json_encode>
 end
 
-function <name>.jsonDecode(input: { [string]: any }): <name>
+function <name>.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): <name>
     <json_decode>
 end
 "#;
@@ -301,6 +303,59 @@ const ENUM: &str = r#"<name> = {
         <from_name>
     end,
 }"#;
+
+const ANY_METHOD_SIGNATURES: &str = r#"
+-- Pack a message into an Any.
+--
+-- If typePrefix is not provided, defaults to "apis.roblox.com/cloud".
+pack: (payload: Message, typePrefix: string?) -> Any,
+
+-- Returns the message contained by the Any (or nil if the Any is empty).
+unpack: (self: Any) -> Message?,
+
+-- Returns true iff the Any contains an object of the type specified by
+-- typeName. If typeName is a full type URL, it will be compared; otherwise,
+-- only the type name will be compared.
+isA: (self: Any, typeName: string) -> boolean,
+"#;
+
+const ANY_METHODS: &str = r#"
+function Any.pack(payload: Message, typePrefix: string?) : Any
+    return Any.new({
+        type_url = (typePrefix or "apis.roblox.com/cloud") .. "/" .. payload.descriptor().full_name(),
+        value = payload:encode()
+    })
+end
+
+function Any.unpack(self: Any, registry: typeRegistry.TypeRegistry) : Message?
+    if self.value == nil then
+        return nil
+    end
+
+    local typeName = self.typeUrlToTypeName(self.type_url)
+    local payloadType = registry:findMessage(typeName)
+
+    if payloadType == nil then
+        error('Unknown type: ' .. typeName)
+    end
+
+    return payloadType.decode(self.value)
+end
+
+function Any.isA(self: Any, typeName: string) : boolean
+    if self.type_url == typeName then
+        return true
+    end
+
+    local suffix = "/" .. typeName
+    return self.type_url:sub(-#suffix) == suffix
+end
+
+function Any.typeUrlToTypeName(typeUrl: string) : string
+    local first, _ = typeUrl:find("([^/]+)$")
+    return typeUrl:sub(first)
+end
+"#;
 
 fn create_decoder(fields: BTreeMap<i32, String>) -> String {
     if fields.is_empty() {
@@ -351,6 +406,7 @@ impl<'a> FileGenerator<'a> {
             roblox_imports: false,
 
             wkt_json: HashMap::from([
+                ("any", include_str!("./luau/proto/wkt/any.luau")),
                 ("duration", include_str!("./luau/proto/wkt/duration.luau")),
                 ("timestamp", include_str!("./luau/proto/wkt/timestamp.luau")),
                 ("struct", include_str!("./luau/proto/wkt/struct.luau")),
@@ -401,6 +457,21 @@ impl<'a> FileGenerator<'a> {
             "local descriptor = require({})",
             self.require_path(&descriptor_require_path)
         ));
+
+        if self.file_descriptor_proto.package() == "google.protobuf"
+            && self
+                .file_descriptor_proto
+                .message_type
+                .iter()
+                .any(|message| message.name() == "Any")
+        {
+            let mut type_registry_require_path = proto_require_path.clone();
+            type_registry_require_path.push("typeRegistry");
+            contents.push(format!(
+                "local typeRegistry = require({})",
+                self.require_path(&type_registry_require_path)
+            ));
+        }
 
         for import in &self.file_descriptor_proto.dependency {
             let path_diff = pathdiff::diff_paths(
@@ -520,15 +591,25 @@ impl<'a> FileGenerator<'a> {
             json_type = special_json_type.unwrap();
         }
 
+        let is_wkt_any =
+            self.file_descriptor_proto.package() == "google.protobuf" && message.name() == "Any";
+
+        let maybe_any_method_signatures = if is_wkt_any {
+            ANY_METHOD_SIGNATURES
+        } else {
+            ""
+        };
+
         self.types.push(format!(
             r#"type _{name}Impl = {{
                 __index: _{name}Impl,
                 new: () -> {name},
                 encode: (self: {name}) -> buffer,
                 decode: (input: buffer) -> {name},
-                jsonEncode: (self: {name}) -> {json_type},
-                jsonDecode: (input: {json_type}) -> {name},
+                jsonEncode: (self: {name}, options: proto.JsonEncodingOptions?) -> {json_type},
+                jsonDecode: (input: {json_type}, options: proto.JsonDecodingOptions?) -> {name},
                 descriptor: () -> descriptor.Descriptor,
+                {maybe_any_method_signatures}
             }}
             "#
         ));
@@ -705,6 +786,10 @@ impl<'a> FileGenerator<'a> {
             )
         }
 
+        // Add special methods for google.protobuf.Any: pack, unpack, and isA.
+        final_code =
+            final_code.replace("<any_methods>", if is_wkt_any { &ANY_METHODS } else { "" });
+
         self.implementations.push(final_code);
         self.implementations.blank();
 
@@ -832,6 +917,7 @@ fn message_special_json_type<'a>(
     message: &'a DescriptorProto,
 ) -> Option<&'a str> {
     let json_type_map: HashMap<&'static str, &'static str> = HashMap::from([
+        ("Any", "{ [string]: any }"),
         ("BoolValue", "boolean"),
         ("BytesValue", "buffer"),
         ("DoubleValue", "number"),
