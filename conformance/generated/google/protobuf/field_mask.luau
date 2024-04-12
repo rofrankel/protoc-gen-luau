@@ -10,8 +10,8 @@ type _FieldMaskImpl = {
 	new: () -> FieldMask,
 	encode: (self: FieldMask) -> buffer,
 	decode: (input: buffer) -> FieldMask,
-	jsonEncode: (self: FieldMask) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> FieldMask,
+	jsonEncode: (self: FieldMask) -> number,
+	jsonDecode: (input: number) -> FieldMask,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -72,48 +72,6 @@ function FieldMask.decode(input: buffer): FieldMask
 	end
 
 	return self
-end
-
-function FieldMask.jsonEncode(self: FieldMask): any
-	local output: {
-		paths: { string }?,
-	} = {}
-
-	if #self.paths > 0 then
-		local newOutput: { string } = {}
-		for _, value: string in self.paths do
-			table.insert(newOutput, value)
-		end
-		output.paths = newOutput
-	end
-
-	return output
-end
-
-function FieldMask.jsonDecode(input: { [string]: any }): FieldMask
-	local self = FieldMask.new()
-
-	if input.paths ~= nil then
-		local newOutput: { string } = {}
-		for _, value: string in input.paths do
-			table.insert(newOutput, value)
-		end
-
-		self.paths = newOutput
-	end
-
-	return self
-end
-
-function FieldMask.descriptor(): descriptor.Descriptor
-	local descriptor = descriptor.Descriptor.new()
-	descriptor.name = function()
-		return "FieldMask"
-	end
-	descriptor.full_name = function()
-		return "<full_name>"
-	end
-	return descriptor
 end
 
 return {

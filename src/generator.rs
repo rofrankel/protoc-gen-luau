@@ -346,6 +346,7 @@ impl<'a> FileGenerator<'a> {
 
             wkt_json: HashMap::from([
                 ("duration", include_str!("./luau/proto/wkt/duration.luau")),
+                ("field_mask", include_str!("./luau/proto/wkt/field_mask.luau")),
                 ("timestamp", include_str!("./luau/proto/wkt/timestamp.luau")),
                 ("struct", include_str!("./luau/proto/wkt/struct.luau")),
                 ("wrappers", include_str!("./luau/proto/wkt/wrappers.luau")),
@@ -829,6 +830,7 @@ fn message_special_json_type<'a>(
         ("BoolValue", "boolean"),
         ("BytesValue", "buffer"),
         ("DoubleValue", "number"),
+        ("FieldMask", "number"),
         ("FloatValue", "number"),
         ("Int32Value", "number"),
         ("Int64Value", "number"),
