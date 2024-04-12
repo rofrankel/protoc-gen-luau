@@ -11,6 +11,7 @@ type _StructImpl = {
 	decode: (input: buffer) -> Struct,
 	jsonEncode: (self: Struct) -> { [string]: any },
 	jsonDecode: (input: { [string]: any }) -> Struct,
+	descriptor: () -> descriptor.Descriptor,
 }
 
 type _StructFields = {
@@ -25,6 +26,7 @@ type _Struct_FieldsEntryImpl = {
 	decode: (input: buffer) -> Struct_FieldsEntry,
 	jsonEncode: (self: Struct_FieldsEntry) -> { [string]: any },
 	jsonDecode: (input: { [string]: any }) -> Struct_FieldsEntry,
+	descriptor: () -> descriptor.Descriptor,
 }
 
 type _Struct_FieldsEntryFields = {
@@ -228,6 +230,17 @@ function Struct_FieldsEntry.jsonDecode(input: { [string]: any }): Struct_FieldsE
 	end
 
 	return self
+end
+
+function Struct_FieldsEntry.descriptor(): descriptor.Descriptor
+	local descriptor = descriptor.Descriptor.new()
+	descriptor.name = function()
+		return "Struct_FieldsEntry"
+	end
+	descriptor.full_name = function()
+		return "google.protobuf.FieldsEntry"
+	end
+	return descriptor
 end
 
 local Value: proto.Message<_ValueImpl> = {} :: _ValueImpl
