@@ -10,8 +10,8 @@ type _DurationImpl = {
 	new: () -> Duration,
 	encode: (self: Duration) -> buffer,
 	decode: (input: buffer) -> Duration,
-	jsonEncode: (self: Duration) -> string,
-	jsonDecode: (input: string) -> Duration,
+	jsonEncode: (self: Duration, options: proto.JsonEncodingOptions?) -> string,
+	jsonDecode: (input: string, options: proto.JsonDecodingOptions?) -> Duration,
 	descriptor: () -> descriptor.Descriptor,
 }
 

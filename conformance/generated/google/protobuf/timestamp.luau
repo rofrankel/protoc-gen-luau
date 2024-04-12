@@ -10,8 +10,8 @@ type _TimestampImpl = {
 	new: () -> Timestamp,
 	encode: (self: Timestamp) -> buffer,
 	decode: (input: buffer) -> Timestamp,
-	jsonEncode: (self: Timestamp) -> string,
-	jsonDecode: (input: string) -> Timestamp,
+	jsonEncode: (self: Timestamp, options: proto.JsonEncodingOptions?) -> string,
+	jsonDecode: (input: string, options: proto.JsonDecodingOptions?) -> Timestamp,
 	descriptor: () -> descriptor.Descriptor,
 }
 

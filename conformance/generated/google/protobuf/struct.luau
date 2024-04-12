@@ -10,8 +10,8 @@ type _StructImpl = {
 	new: () -> Struct,
 	encode: (self: Struct) -> buffer,
 	decode: (input: buffer) -> Struct,
-	jsonEncode: (self: Struct) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> Struct,
+	jsonEncode: (self: Struct, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> Struct,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -25,8 +25,8 @@ type _Struct_FieldsEntryImpl = {
 	new: () -> Struct_FieldsEntry,
 	encode: (self: Struct_FieldsEntry) -> buffer,
 	decode: (input: buffer) -> Struct_FieldsEntry,
-	jsonEncode: (self: Struct_FieldsEntry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> Struct_FieldsEntry,
+	jsonEncode: (self: Struct_FieldsEntry, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> Struct_FieldsEntry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -41,8 +41,8 @@ type _ValueImpl = {
 	new: () -> Value,
 	encode: (self: Value) -> buffer,
 	decode: (input: buffer) -> Value,
-	jsonEncode: (self: Value) -> any,
-	jsonDecode: (input: any) -> Value,
+	jsonEncode: (self: Value, options: proto.JsonEncodingOptions?) -> any,
+	jsonDecode: (input: any, options: proto.JsonDecodingOptions?) -> Value,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -63,8 +63,8 @@ type _ListValueImpl = {
 	new: () -> ListValue,
 	encode: (self: ListValue) -> buffer,
 	decode: (input: buffer) -> ListValue,
-	jsonEncode: (self: ListValue) -> { any },
-	jsonDecode: (input: { any }) -> ListValue,
+	jsonEncode: (self: ListValue, options: proto.JsonEncodingOptions?) -> { any },
+	jsonDecode: (input: { any }, options: proto.JsonDecodingOptions?) -> ListValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -215,7 +215,7 @@ function Struct_FieldsEntry.decode(input: buffer): Struct_FieldsEntry
 	return self
 end
 
-function Struct_FieldsEntry.jsonEncode(self: Struct_FieldsEntry): any
+function Struct_FieldsEntry.jsonEncode(self: Struct_FieldsEntry, options: proto.JsonEncodingOptions?): any
 	local output: {
 		key: string?,
 		value: Value?,
@@ -232,7 +232,10 @@ function Struct_FieldsEntry.jsonEncode(self: Struct_FieldsEntry): any
 	return output
 end
 
-function Struct_FieldsEntry.jsonDecode(input: { [string]: any }): Struct_FieldsEntry
+function Struct_FieldsEntry.jsonDecode(
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
+): Struct_FieldsEntry
 	local self = Struct_FieldsEntry.new()
 
 	if input.key ~= nil then
