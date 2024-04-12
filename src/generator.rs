@@ -61,6 +61,12 @@ pub fn generate_response(request: CodeGeneratorRequest) -> CodeGeneratorResponse
         ..Default::default()
     });
 
+    files.push(File {
+        name: Some("proto/typeRegistry.luau".to_owned()),
+        content: Some(include_str!("./luau/proto/typeRegistry.luau").to_owned()),
+        ..Default::default()
+    });
+
     files.append(
         &mut request
             .proto_file
@@ -263,6 +269,13 @@ function <name>.decode(input: buffer): <name>
 end
 
 <json>
+
+function <name>.descriptor() : descriptor.Descriptor
+    local descriptor = descriptor.Descriptor.new()
+    descriptor.name = function() return "<name>" end
+    descriptor.full_name = function() return "<full_name>" end
+    return descriptor
+end
 "#;
 
 const JSON: &str = r#"
@@ -272,13 +285,6 @@ end
 
 function <name>.jsonDecode(input: { [string]: any }): <name>
     <json_decode>
-end
-
-function <name>.descriptor() : descriptor.Descriptor
-    local descriptor = descriptor.Descriptor.new()
-    descriptor.name = function() return "<name>" end
-    descriptor.full_name = function() return "<full_name>" end
-    return descriptor
 end
 "#;
 
