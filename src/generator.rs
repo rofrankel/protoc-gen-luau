@@ -55,6 +55,12 @@ pub fn generate_response(request: CodeGeneratorRequest) -> CodeGeneratorResponse
         ..Default::default()
     });
 
+    files.push(File {
+        name: Some("proto/type_registry.luau".to_owned()),
+        content: Some(include_str!("./luau/proto/type_registry.luau").to_owned()),
+        ..Default::default()
+    });
+
     files.append(
         &mut request
             .proto_file
@@ -264,6 +270,8 @@ _<name>Impl.descriptor = {
 }
 
 <name> = _<name>Impl
+
+type_registry.default:register(<name>)
 "#;
 
 const JSON: &str = r#"
@@ -372,6 +380,13 @@ impl<'a> FileGenerator<'a> {
         contents.push(format!(
             "local proto = require({})",
             self.require_path(&proto_require_path)
+        ));
+
+        let mut type_registry_require_path = proto_require_path.clone();
+        type_registry_require_path.push("type_registry");
+        contents.push(format!(
+            "local type_registry = require({})",
+            self.require_path(&type_registry_require_path)
         ));
 
         for import in &self.file_descriptor_proto.dependency {

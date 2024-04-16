@@ -35,6 +35,12 @@ function TypeRegistry.findMessage(self, name)
   return self.types and self.types[name]
 end
 
+function TypeRegistry.register(self, type)
+  self.types[type.descriptor.fullName] = type
+end
+
+local default = TypeRegistry.new({})
+
 return {
   TypeRegistry = TypeRegistry,
   default = default,
