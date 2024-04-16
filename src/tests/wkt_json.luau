@@ -142,6 +142,17 @@ describe("JSON round-trips should work for", function()
 
 			assertEquals(deserialized_duration:jsonEncode(), json)
 		end)
+
+		it("with negative nanos", function()
+			local json = "-1.000000001s"
+
+			local deserialized_duration = duration.Duration.jsonDecode(json)
+
+			assertEquals(deserialized_duration.seconds, -1)
+			assertEquals(deserialized_duration.nanos, -1)
+
+			assertEquals(deserialized_duration:jsonEncode(), json)
+		end)
 	end)
 
 	describe("wrapper for", function()
