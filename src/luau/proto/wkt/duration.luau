@@ -1,4 +1,5 @@
 local function serializeFractionalNanos(nanos: number): string
+  nanos = nanos * math.sign(nanos)
 	if nanos % 1e6 == 0 then
 		return string.format(".%03ds", nanos)
 	elseif nanos % 1e3 == 0 then
@@ -57,6 +58,6 @@ function Duration.jsonDecode(durationString: string): Duration
 
   return Duration.new({
     seconds = seconds,
-    nanos = deserializeFractionalNanos(nanosText),
+    nanos = deserializeFractionalNanos(nanosText) * math.sign(seconds),
   })
 end
