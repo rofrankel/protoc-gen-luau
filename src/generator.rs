@@ -819,6 +819,7 @@ impl<'a> FileGenerator<'a> {
 fn native_wkt_implementation(name: &str) -> Option<&'static str> {
     match name {
         "duration" => Some(include_str!("./luau/proto/wkt/duration.luau")),
+        "field_mask" => Some(include_str!("./luau/proto/wkt/field_mask.luau")),
         "timestamp" => Some(include_str!("./luau/proto/wkt/timestamp.luau")),
         "struct" => Some(include_str!("./luau/proto/wkt/struct.luau")),
         "wrappers" => Some(include_str!("./luau/proto/wkt/wrappers.luau")),
@@ -838,6 +839,7 @@ fn message_special_json_type(
         "BoolValue" => Some("boolean"),
         "BytesValue" => Some("buffer"),
         "DoubleValue" => Some("number"),
+        "FieldMask" => Some("string"),
         "FloatValue" => Some("number"),
         "Int32Value" => Some("number"),
         "Int64Value" => Some("number"),
