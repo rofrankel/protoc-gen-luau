@@ -16,8 +16,8 @@ type _TestAllTypesProto3Impl = {
 	new: () -> TestAllTypesProto3,
 	encode: (self: TestAllTypesProto3) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3,
-	jsonEncode: (self: TestAllTypesProto3) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3,
+	jsonEncode: (self: TestAllTypesProto3, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> TestAllTypesProto3,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -185,8 +185,8 @@ type _TestAllTypesProto3_NestedMessageImpl = {
 	new: () -> TestAllTypesProto3_NestedMessage,
 	encode: (self: TestAllTypesProto3_NestedMessage) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_NestedMessage,
-	jsonEncode: (self: TestAllTypesProto3_NestedMessage) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_NestedMessage,
+	jsonEncode: (self: TestAllTypesProto3_NestedMessage, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> TestAllTypesProto3_NestedMessage,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -206,8 +206,11 @@ type _TestAllTypesProto3_MapInt32Int32EntryImpl = {
 	new: () -> TestAllTypesProto3_MapInt32Int32Entry,
 	encode: (self: TestAllTypesProto3_MapInt32Int32Entry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapInt32Int32Entry,
-	jsonEncode: (self: TestAllTypesProto3_MapInt32Int32Entry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapInt32Int32Entry,
+	jsonEncode: (self: TestAllTypesProto3_MapInt32Int32Entry, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapInt32Int32Entry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -227,8 +230,11 @@ type _TestAllTypesProto3_MapInt64Int64EntryImpl = {
 	new: () -> TestAllTypesProto3_MapInt64Int64Entry,
 	encode: (self: TestAllTypesProto3_MapInt64Int64Entry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapInt64Int64Entry,
-	jsonEncode: (self: TestAllTypesProto3_MapInt64Int64Entry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapInt64Int64Entry,
+	jsonEncode: (self: TestAllTypesProto3_MapInt64Int64Entry, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapInt64Int64Entry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -248,8 +254,14 @@ type _TestAllTypesProto3_MapUint32Uint32EntryImpl = {
 	new: () -> TestAllTypesProto3_MapUint32Uint32Entry,
 	encode: (self: TestAllTypesProto3_MapUint32Uint32Entry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapUint32Uint32Entry,
-	jsonEncode: (self: TestAllTypesProto3_MapUint32Uint32Entry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapUint32Uint32Entry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapUint32Uint32Entry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapUint32Uint32Entry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -269,8 +281,14 @@ type _TestAllTypesProto3_MapUint64Uint64EntryImpl = {
 	new: () -> TestAllTypesProto3_MapUint64Uint64Entry,
 	encode: (self: TestAllTypesProto3_MapUint64Uint64Entry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapUint64Uint64Entry,
-	jsonEncode: (self: TestAllTypesProto3_MapUint64Uint64Entry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapUint64Uint64Entry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapUint64Uint64Entry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapUint64Uint64Entry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -290,8 +308,14 @@ type _TestAllTypesProto3_MapSint32Sint32EntryImpl = {
 	new: () -> TestAllTypesProto3_MapSint32Sint32Entry,
 	encode: (self: TestAllTypesProto3_MapSint32Sint32Entry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapSint32Sint32Entry,
-	jsonEncode: (self: TestAllTypesProto3_MapSint32Sint32Entry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapSint32Sint32Entry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapSint32Sint32Entry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapSint32Sint32Entry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -311,8 +335,14 @@ type _TestAllTypesProto3_MapSint64Sint64EntryImpl = {
 	new: () -> TestAllTypesProto3_MapSint64Sint64Entry,
 	encode: (self: TestAllTypesProto3_MapSint64Sint64Entry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapSint64Sint64Entry,
-	jsonEncode: (self: TestAllTypesProto3_MapSint64Sint64Entry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapSint64Sint64Entry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapSint64Sint64Entry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapSint64Sint64Entry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -332,8 +362,14 @@ type _TestAllTypesProto3_MapFixed32Fixed32EntryImpl = {
 	new: () -> TestAllTypesProto3_MapFixed32Fixed32Entry,
 	encode: (self: TestAllTypesProto3_MapFixed32Fixed32Entry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapFixed32Fixed32Entry,
-	jsonEncode: (self: TestAllTypesProto3_MapFixed32Fixed32Entry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapFixed32Fixed32Entry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapFixed32Fixed32Entry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapFixed32Fixed32Entry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -353,8 +389,14 @@ type _TestAllTypesProto3_MapFixed64Fixed64EntryImpl = {
 	new: () -> TestAllTypesProto3_MapFixed64Fixed64Entry,
 	encode: (self: TestAllTypesProto3_MapFixed64Fixed64Entry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapFixed64Fixed64Entry,
-	jsonEncode: (self: TestAllTypesProto3_MapFixed64Fixed64Entry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapFixed64Fixed64Entry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapFixed64Fixed64Entry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapFixed64Fixed64Entry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -374,8 +416,14 @@ type _TestAllTypesProto3_MapSfixed32Sfixed32EntryImpl = {
 	new: () -> TestAllTypesProto3_MapSfixed32Sfixed32Entry,
 	encode: (self: TestAllTypesProto3_MapSfixed32Sfixed32Entry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapSfixed32Sfixed32Entry,
-	jsonEncode: (self: TestAllTypesProto3_MapSfixed32Sfixed32Entry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapSfixed32Sfixed32Entry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapSfixed32Sfixed32Entry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapSfixed32Sfixed32Entry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -395,8 +443,14 @@ type _TestAllTypesProto3_MapSfixed64Sfixed64EntryImpl = {
 	new: () -> TestAllTypesProto3_MapSfixed64Sfixed64Entry,
 	encode: (self: TestAllTypesProto3_MapSfixed64Sfixed64Entry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapSfixed64Sfixed64Entry,
-	jsonEncode: (self: TestAllTypesProto3_MapSfixed64Sfixed64Entry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapSfixed64Sfixed64Entry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapSfixed64Sfixed64Entry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapSfixed64Sfixed64Entry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -416,8 +470,11 @@ type _TestAllTypesProto3_MapInt32FloatEntryImpl = {
 	new: () -> TestAllTypesProto3_MapInt32FloatEntry,
 	encode: (self: TestAllTypesProto3_MapInt32FloatEntry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapInt32FloatEntry,
-	jsonEncode: (self: TestAllTypesProto3_MapInt32FloatEntry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapInt32FloatEntry,
+	jsonEncode: (self: TestAllTypesProto3_MapInt32FloatEntry, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapInt32FloatEntry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -437,8 +494,14 @@ type _TestAllTypesProto3_MapInt32DoubleEntryImpl = {
 	new: () -> TestAllTypesProto3_MapInt32DoubleEntry,
 	encode: (self: TestAllTypesProto3_MapInt32DoubleEntry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapInt32DoubleEntry,
-	jsonEncode: (self: TestAllTypesProto3_MapInt32DoubleEntry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapInt32DoubleEntry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapInt32DoubleEntry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapInt32DoubleEntry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -458,8 +521,8 @@ type _TestAllTypesProto3_MapBoolBoolEntryImpl = {
 	new: () -> TestAllTypesProto3_MapBoolBoolEntry,
 	encode: (self: TestAllTypesProto3_MapBoolBoolEntry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapBoolBoolEntry,
-	jsonEncode: (self: TestAllTypesProto3_MapBoolBoolEntry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapBoolBoolEntry,
+	jsonEncode: (self: TestAllTypesProto3_MapBoolBoolEntry, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> TestAllTypesProto3_MapBoolBoolEntry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -479,8 +542,14 @@ type _TestAllTypesProto3_MapStringStringEntryImpl = {
 	new: () -> TestAllTypesProto3_MapStringStringEntry,
 	encode: (self: TestAllTypesProto3_MapStringStringEntry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapStringStringEntry,
-	jsonEncode: (self: TestAllTypesProto3_MapStringStringEntry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapStringStringEntry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapStringStringEntry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapStringStringEntry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -500,8 +569,14 @@ type _TestAllTypesProto3_MapStringBytesEntryImpl = {
 	new: () -> TestAllTypesProto3_MapStringBytesEntry,
 	encode: (self: TestAllTypesProto3_MapStringBytesEntry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapStringBytesEntry,
-	jsonEncode: (self: TestAllTypesProto3_MapStringBytesEntry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapStringBytesEntry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapStringBytesEntry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapStringBytesEntry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -521,8 +596,14 @@ type _TestAllTypesProto3_MapStringNestedMessageEntryImpl = {
 	new: () -> TestAllTypesProto3_MapStringNestedMessageEntry,
 	encode: (self: TestAllTypesProto3_MapStringNestedMessageEntry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapStringNestedMessageEntry,
-	jsonEncode: (self: TestAllTypesProto3_MapStringNestedMessageEntry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapStringNestedMessageEntry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapStringNestedMessageEntry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapStringNestedMessageEntry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -542,8 +623,14 @@ type _TestAllTypesProto3_MapStringForeignMessageEntryImpl = {
 	new: () -> TestAllTypesProto3_MapStringForeignMessageEntry,
 	encode: (self: TestAllTypesProto3_MapStringForeignMessageEntry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapStringForeignMessageEntry,
-	jsonEncode: (self: TestAllTypesProto3_MapStringForeignMessageEntry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapStringForeignMessageEntry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapStringForeignMessageEntry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapStringForeignMessageEntry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -563,8 +650,14 @@ type _TestAllTypesProto3_MapStringNestedEnumEntryImpl = {
 	new: () -> TestAllTypesProto3_MapStringNestedEnumEntry,
 	encode: (self: TestAllTypesProto3_MapStringNestedEnumEntry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapStringNestedEnumEntry,
-	jsonEncode: (self: TestAllTypesProto3_MapStringNestedEnumEntry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapStringNestedEnumEntry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapStringNestedEnumEntry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapStringNestedEnumEntry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -584,8 +677,14 @@ type _TestAllTypesProto3_MapStringForeignEnumEntryImpl = {
 	new: () -> TestAllTypesProto3_MapStringForeignEnumEntry,
 	encode: (self: TestAllTypesProto3_MapStringForeignEnumEntry) -> buffer,
 	decode: (input: buffer) -> TestAllTypesProto3_MapStringForeignEnumEntry,
-	jsonEncode: (self: TestAllTypesProto3_MapStringForeignEnumEntry) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> TestAllTypesProto3_MapStringForeignEnumEntry,
+	jsonEncode: (
+		self: TestAllTypesProto3_MapStringForeignEnumEntry,
+		options: proto.JsonEncodingOptions?
+	) -> { [string]: any },
+	jsonDecode: (
+		input: { [string]: any },
+		options: proto.JsonDecodingOptions?
+	) -> TestAllTypesProto3_MapStringForeignEnumEntry,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -611,8 +710,8 @@ type _ForeignMessageImpl = {
 	new: () -> ForeignMessage,
 	encode: (self: ForeignMessage) -> buffer,
 	decode: (input: buffer) -> ForeignMessage,
-	jsonEncode: (self: ForeignMessage) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> ForeignMessage,
+	jsonEncode: (self: ForeignMessage, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> ForeignMessage,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -628,8 +727,8 @@ type _NullHypothesisProto3Impl = {
 	new: () -> NullHypothesisProto3,
 	encode: (self: NullHypothesisProto3) -> buffer,
 	decode: (input: buffer) -> NullHypothesisProto3,
-	jsonEncode: (self: NullHypothesisProto3) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> NullHypothesisProto3,
+	jsonEncode: (self: NullHypothesisProto3, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> NullHypothesisProto3,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -646,8 +745,8 @@ type _EnumOnlyProto3Impl = {
 	new: () -> EnumOnlyProto3,
 	encode: (self: EnumOnlyProto3) -> buffer,
 	decode: (input: buffer) -> EnumOnlyProto3,
-	jsonEncode: (self: EnumOnlyProto3) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> EnumOnlyProto3,
+	jsonEncode: (self: EnumOnlyProto3, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> EnumOnlyProto3,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -3060,7 +3159,7 @@ function _TestAllTypesProto3Impl.decode(input: buffer): TestAllTypesProto3
 	return self
 end
 
-function _TestAllTypesProto3Impl.jsonEncode(self: TestAllTypesProto3): any
+function _TestAllTypesProto3Impl.jsonEncode(self: TestAllTypesProto3, options: proto.JsonEncodingOptions?): any
 	local output: {
 		optionalInt32: number?,
 		optionalInt64: number?,
@@ -4167,7 +4266,10 @@ function _TestAllTypesProto3Impl.jsonEncode(self: TestAllTypesProto3): any
 	return output
 end
 
-function _TestAllTypesProto3Impl.jsonDecode(input: { [string]: any }): TestAllTypesProto3
+function _TestAllTypesProto3Impl.jsonDecode(
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
+): TestAllTypesProto3
 	local self = TestAllTypesProto3.new()
 
 	if input.optional_int32 ~= nil then
@@ -6372,7 +6474,10 @@ function _TestAllTypesProto3_NestedMessageImpl.decode(input: buffer): TestAllTyp
 	return self
 end
 
-function _TestAllTypesProto3_NestedMessageImpl.jsonEncode(self: TestAllTypesProto3_NestedMessage): any
+function _TestAllTypesProto3_NestedMessageImpl.jsonEncode(
+	self: TestAllTypesProto3_NestedMessage,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		a: number?,
 		corecursive: TestAllTypesProto3?,
@@ -6389,7 +6494,10 @@ function _TestAllTypesProto3_NestedMessageImpl.jsonEncode(self: TestAllTypesProt
 	return output
 end
 
-function _TestAllTypesProto3_NestedMessageImpl.jsonDecode(input: { [string]: any }): TestAllTypesProto3_NestedMessage
+function _TestAllTypesProto3_NestedMessageImpl.jsonDecode(
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
+): TestAllTypesProto3_NestedMessage
 	local self = TestAllTypesProto3_NestedMessage.new()
 
 	if input.a ~= nil then
@@ -6479,7 +6587,10 @@ function _TestAllTypesProto3_MapInt32Int32EntryImpl.decode(input: buffer): TestA
 	return self
 end
 
-function _TestAllTypesProto3_MapInt32Int32EntryImpl.jsonEncode(self: TestAllTypesProto3_MapInt32Int32Entry): any
+function _TestAllTypesProto3_MapInt32Int32EntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapInt32Int32Entry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: number?,
 		value: number?,
@@ -6497,7 +6608,8 @@ function _TestAllTypesProto3_MapInt32Int32EntryImpl.jsonEncode(self: TestAllType
 end
 
 function _TestAllTypesProto3_MapInt32Int32EntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapInt32Int32Entry
 	local self = TestAllTypesProto3_MapInt32Int32Entry.new()
 
@@ -6588,7 +6700,10 @@ function _TestAllTypesProto3_MapInt64Int64EntryImpl.decode(input: buffer): TestA
 	return self
 end
 
-function _TestAllTypesProto3_MapInt64Int64EntryImpl.jsonEncode(self: TestAllTypesProto3_MapInt64Int64Entry): any
+function _TestAllTypesProto3_MapInt64Int64EntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapInt64Int64Entry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: number?,
 		value: number?,
@@ -6606,7 +6721,8 @@ function _TestAllTypesProto3_MapInt64Int64EntryImpl.jsonEncode(self: TestAllType
 end
 
 function _TestAllTypesProto3_MapInt64Int64EntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapInt64Int64Entry
 	local self = TestAllTypesProto3_MapInt64Int64Entry.new()
 
@@ -6697,7 +6813,10 @@ function _TestAllTypesProto3_MapUint32Uint32EntryImpl.decode(input: buffer): Tes
 	return self
 end
 
-function _TestAllTypesProto3_MapUint32Uint32EntryImpl.jsonEncode(self: TestAllTypesProto3_MapUint32Uint32Entry): any
+function _TestAllTypesProto3_MapUint32Uint32EntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapUint32Uint32Entry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: number?,
 		value: number?,
@@ -6715,7 +6834,8 @@ function _TestAllTypesProto3_MapUint32Uint32EntryImpl.jsonEncode(self: TestAllTy
 end
 
 function _TestAllTypesProto3_MapUint32Uint32EntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapUint32Uint32Entry
 	local self = TestAllTypesProto3_MapUint32Uint32Entry.new()
 
@@ -6806,7 +6926,10 @@ function _TestAllTypesProto3_MapUint64Uint64EntryImpl.decode(input: buffer): Tes
 	return self
 end
 
-function _TestAllTypesProto3_MapUint64Uint64EntryImpl.jsonEncode(self: TestAllTypesProto3_MapUint64Uint64Entry): any
+function _TestAllTypesProto3_MapUint64Uint64EntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapUint64Uint64Entry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: number?,
 		value: number?,
@@ -6824,7 +6947,8 @@ function _TestAllTypesProto3_MapUint64Uint64EntryImpl.jsonEncode(self: TestAllTy
 end
 
 function _TestAllTypesProto3_MapUint64Uint64EntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapUint64Uint64Entry
 	local self = TestAllTypesProto3_MapUint64Uint64Entry.new()
 
@@ -6915,7 +7039,10 @@ function _TestAllTypesProto3_MapSint32Sint32EntryImpl.decode(input: buffer): Tes
 	return self
 end
 
-function _TestAllTypesProto3_MapSint32Sint32EntryImpl.jsonEncode(self: TestAllTypesProto3_MapSint32Sint32Entry): any
+function _TestAllTypesProto3_MapSint32Sint32EntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapSint32Sint32Entry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: number?,
 		value: number?,
@@ -6933,7 +7060,8 @@ function _TestAllTypesProto3_MapSint32Sint32EntryImpl.jsonEncode(self: TestAllTy
 end
 
 function _TestAllTypesProto3_MapSint32Sint32EntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapSint32Sint32Entry
 	local self = TestAllTypesProto3_MapSint32Sint32Entry.new()
 
@@ -7024,7 +7152,10 @@ function _TestAllTypesProto3_MapSint64Sint64EntryImpl.decode(input: buffer): Tes
 	return self
 end
 
-function _TestAllTypesProto3_MapSint64Sint64EntryImpl.jsonEncode(self: TestAllTypesProto3_MapSint64Sint64Entry): any
+function _TestAllTypesProto3_MapSint64Sint64EntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapSint64Sint64Entry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: number?,
 		value: number?,
@@ -7042,7 +7173,8 @@ function _TestAllTypesProto3_MapSint64Sint64EntryImpl.jsonEncode(self: TestAllTy
 end
 
 function _TestAllTypesProto3_MapSint64Sint64EntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapSint64Sint64Entry
 	local self = TestAllTypesProto3_MapSint64Sint64Entry.new()
 
@@ -7133,7 +7265,10 @@ function _TestAllTypesProto3_MapFixed32Fixed32EntryImpl.decode(input: buffer): T
 	return self
 end
 
-function _TestAllTypesProto3_MapFixed32Fixed32EntryImpl.jsonEncode(self: TestAllTypesProto3_MapFixed32Fixed32Entry): any
+function _TestAllTypesProto3_MapFixed32Fixed32EntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapFixed32Fixed32Entry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: number?,
 		value: number?,
@@ -7151,7 +7286,8 @@ function _TestAllTypesProto3_MapFixed32Fixed32EntryImpl.jsonEncode(self: TestAll
 end
 
 function _TestAllTypesProto3_MapFixed32Fixed32EntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapFixed32Fixed32Entry
 	local self = TestAllTypesProto3_MapFixed32Fixed32Entry.new()
 
@@ -7242,7 +7378,10 @@ function _TestAllTypesProto3_MapFixed64Fixed64EntryImpl.decode(input: buffer): T
 	return self
 end
 
-function _TestAllTypesProto3_MapFixed64Fixed64EntryImpl.jsonEncode(self: TestAllTypesProto3_MapFixed64Fixed64Entry): any
+function _TestAllTypesProto3_MapFixed64Fixed64EntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapFixed64Fixed64Entry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: number?,
 		value: number?,
@@ -7260,7 +7399,8 @@ function _TestAllTypesProto3_MapFixed64Fixed64EntryImpl.jsonEncode(self: TestAll
 end
 
 function _TestAllTypesProto3_MapFixed64Fixed64EntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapFixed64Fixed64Entry
 	local self = TestAllTypesProto3_MapFixed64Fixed64Entry.new()
 
@@ -7356,7 +7496,8 @@ function _TestAllTypesProto3_MapSfixed32Sfixed32EntryImpl.decode(
 end
 
 function _TestAllTypesProto3_MapSfixed32Sfixed32EntryImpl.jsonEncode(
-	self: TestAllTypesProto3_MapSfixed32Sfixed32Entry
+	self: TestAllTypesProto3_MapSfixed32Sfixed32Entry,
+	options: proto.JsonEncodingOptions?
 ): any
 	local output: {
 		key: number?,
@@ -7375,7 +7516,8 @@ function _TestAllTypesProto3_MapSfixed32Sfixed32EntryImpl.jsonEncode(
 end
 
 function _TestAllTypesProto3_MapSfixed32Sfixed32EntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapSfixed32Sfixed32Entry
 	local self = TestAllTypesProto3_MapSfixed32Sfixed32Entry.new()
 
@@ -7471,7 +7613,8 @@ function _TestAllTypesProto3_MapSfixed64Sfixed64EntryImpl.decode(
 end
 
 function _TestAllTypesProto3_MapSfixed64Sfixed64EntryImpl.jsonEncode(
-	self: TestAllTypesProto3_MapSfixed64Sfixed64Entry
+	self: TestAllTypesProto3_MapSfixed64Sfixed64Entry,
+	options: proto.JsonEncodingOptions?
 ): any
 	local output: {
 		key: number?,
@@ -7490,7 +7633,8 @@ function _TestAllTypesProto3_MapSfixed64Sfixed64EntryImpl.jsonEncode(
 end
 
 function _TestAllTypesProto3_MapSfixed64Sfixed64EntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapSfixed64Sfixed64Entry
 	local self = TestAllTypesProto3_MapSfixed64Sfixed64Entry.new()
 
@@ -7581,7 +7725,10 @@ function _TestAllTypesProto3_MapInt32FloatEntryImpl.decode(input: buffer): TestA
 	return self
 end
 
-function _TestAllTypesProto3_MapInt32FloatEntryImpl.jsonEncode(self: TestAllTypesProto3_MapInt32FloatEntry): any
+function _TestAllTypesProto3_MapInt32FloatEntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapInt32FloatEntry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: number?,
 		value: (number | string)?,
@@ -7599,7 +7746,8 @@ function _TestAllTypesProto3_MapInt32FloatEntryImpl.jsonEncode(self: TestAllType
 end
 
 function _TestAllTypesProto3_MapInt32FloatEntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapInt32FloatEntry
 	local self = TestAllTypesProto3_MapInt32FloatEntry.new()
 
@@ -7690,7 +7838,10 @@ function _TestAllTypesProto3_MapInt32DoubleEntryImpl.decode(input: buffer): Test
 	return self
 end
 
-function _TestAllTypesProto3_MapInt32DoubleEntryImpl.jsonEncode(self: TestAllTypesProto3_MapInt32DoubleEntry): any
+function _TestAllTypesProto3_MapInt32DoubleEntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapInt32DoubleEntry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: number?,
 		value: (number | string)?,
@@ -7708,7 +7859,8 @@ function _TestAllTypesProto3_MapInt32DoubleEntryImpl.jsonEncode(self: TestAllTyp
 end
 
 function _TestAllTypesProto3_MapInt32DoubleEntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapInt32DoubleEntry
 	local self = TestAllTypesProto3_MapInt32DoubleEntry.new()
 
@@ -7799,7 +7951,10 @@ function _TestAllTypesProto3_MapBoolBoolEntryImpl.decode(input: buffer): TestAll
 	return self
 end
 
-function _TestAllTypesProto3_MapBoolBoolEntryImpl.jsonEncode(self: TestAllTypesProto3_MapBoolBoolEntry): any
+function _TestAllTypesProto3_MapBoolBoolEntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapBoolBoolEntry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: boolean?,
 		value: boolean?,
@@ -7817,7 +7972,8 @@ function _TestAllTypesProto3_MapBoolBoolEntryImpl.jsonEncode(self: TestAllTypesP
 end
 
 function _TestAllTypesProto3_MapBoolBoolEntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapBoolBoolEntry
 	local self = TestAllTypesProto3_MapBoolBoolEntry.new()
 
@@ -7908,7 +8064,10 @@ function _TestAllTypesProto3_MapStringStringEntryImpl.decode(input: buffer): Tes
 	return self
 end
 
-function _TestAllTypesProto3_MapStringStringEntryImpl.jsonEncode(self: TestAllTypesProto3_MapStringStringEntry): any
+function _TestAllTypesProto3_MapStringStringEntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapStringStringEntry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: string?,
 		value: string?,
@@ -7926,7 +8085,8 @@ function _TestAllTypesProto3_MapStringStringEntryImpl.jsonEncode(self: TestAllTy
 end
 
 function _TestAllTypesProto3_MapStringStringEntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapStringStringEntry
 	local self = TestAllTypesProto3_MapStringStringEntry.new()
 
@@ -8017,7 +8177,10 @@ function _TestAllTypesProto3_MapStringBytesEntryImpl.decode(input: buffer): Test
 	return self
 end
 
-function _TestAllTypesProto3_MapStringBytesEntryImpl.jsonEncode(self: TestAllTypesProto3_MapStringBytesEntry): any
+function _TestAllTypesProto3_MapStringBytesEntryImpl.jsonEncode(
+	self: TestAllTypesProto3_MapStringBytesEntry,
+	options: proto.JsonEncodingOptions?
+): any
 	local output: {
 		key: string?,
 		value: buffer?,
@@ -8035,7 +8198,8 @@ function _TestAllTypesProto3_MapStringBytesEntryImpl.jsonEncode(self: TestAllTyp
 end
 
 function _TestAllTypesProto3_MapStringBytesEntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapStringBytesEntry
 	local self = TestAllTypesProto3_MapStringBytesEntry.new()
 
@@ -8132,7 +8296,8 @@ function _TestAllTypesProto3_MapStringNestedMessageEntryImpl.decode(
 end
 
 function _TestAllTypesProto3_MapStringNestedMessageEntryImpl.jsonEncode(
-	self: TestAllTypesProto3_MapStringNestedMessageEntry
+	self: TestAllTypesProto3_MapStringNestedMessageEntry,
+	options: proto.JsonEncodingOptions?
 ): any
 	local output: {
 		key: string?,
@@ -8151,7 +8316,8 @@ function _TestAllTypesProto3_MapStringNestedMessageEntryImpl.jsonEncode(
 end
 
 function _TestAllTypesProto3_MapStringNestedMessageEntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapStringNestedMessageEntry
 	local self = TestAllTypesProto3_MapStringNestedMessageEntry.new()
 
@@ -8248,7 +8414,8 @@ function _TestAllTypesProto3_MapStringForeignMessageEntryImpl.decode(
 end
 
 function _TestAllTypesProto3_MapStringForeignMessageEntryImpl.jsonEncode(
-	self: TestAllTypesProto3_MapStringForeignMessageEntry
+	self: TestAllTypesProto3_MapStringForeignMessageEntry,
+	options: proto.JsonEncodingOptions?
 ): any
 	local output: {
 		key: string?,
@@ -8267,7 +8434,8 @@ function _TestAllTypesProto3_MapStringForeignMessageEntryImpl.jsonEncode(
 end
 
 function _TestAllTypesProto3_MapStringForeignMessageEntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapStringForeignMessageEntry
 	local self = TestAllTypesProto3_MapStringForeignMessageEntry.new()
 
@@ -8365,7 +8533,8 @@ function _TestAllTypesProto3_MapStringNestedEnumEntryImpl.decode(
 end
 
 function _TestAllTypesProto3_MapStringNestedEnumEntryImpl.jsonEncode(
-	self: TestAllTypesProto3_MapStringNestedEnumEntry
+	self: TestAllTypesProto3_MapStringNestedEnumEntry,
+	options: proto.JsonEncodingOptions?
 ): any
 	local output: {
 		key: string?,
@@ -8386,7 +8555,8 @@ function _TestAllTypesProto3_MapStringNestedEnumEntryImpl.jsonEncode(
 end
 
 function _TestAllTypesProto3_MapStringNestedEnumEntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapStringNestedEnumEntry
 	local self = TestAllTypesProto3_MapStringNestedEnumEntry.new()
 
@@ -8484,7 +8654,8 @@ function _TestAllTypesProto3_MapStringForeignEnumEntryImpl.decode(
 end
 
 function _TestAllTypesProto3_MapStringForeignEnumEntryImpl.jsonEncode(
-	self: TestAllTypesProto3_MapStringForeignEnumEntry
+	self: TestAllTypesProto3_MapStringForeignEnumEntry,
+	options: proto.JsonEncodingOptions?
 ): any
 	local output: {
 		key: string?,
@@ -8503,7 +8674,8 @@ function _TestAllTypesProto3_MapStringForeignEnumEntryImpl.jsonEncode(
 end
 
 function _TestAllTypesProto3_MapStringForeignEnumEntryImpl.jsonDecode(
-	input: { [string]: any }
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
 ): TestAllTypesProto3_MapStringForeignEnumEntry
 	local self = TestAllTypesProto3_MapStringForeignEnumEntry.new()
 
@@ -8678,7 +8850,7 @@ function _ForeignMessageImpl.decode(input: buffer): ForeignMessage
 	return self
 end
 
-function _ForeignMessageImpl.jsonEncode(self: ForeignMessage): any
+function _ForeignMessageImpl.jsonEncode(self: ForeignMessage, options: proto.JsonEncodingOptions?): any
 	local output: {
 		c: number?,
 	} = {}
@@ -8690,7 +8862,7 @@ function _ForeignMessageImpl.jsonEncode(self: ForeignMessage): any
 	return output
 end
 
-function _ForeignMessageImpl.jsonDecode(input: { [string]: any }): ForeignMessage
+function _ForeignMessageImpl.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): ForeignMessage
 	local self = ForeignMessage.new()
 
 	if input.c ~= nil then
@@ -8753,13 +8925,16 @@ function _NullHypothesisProto3Impl.decode(input: buffer): NullHypothesisProto3
 	return self
 end
 
-function _NullHypothesisProto3Impl.jsonEncode(self: NullHypothesisProto3): any
+function _NullHypothesisProto3Impl.jsonEncode(self: NullHypothesisProto3, options: proto.JsonEncodingOptions?): any
 	local output: {} = {}
 
 	return output
 end
 
-function _NullHypothesisProto3Impl.jsonDecode(input: { [string]: any }): NullHypothesisProto3
+function _NullHypothesisProto3Impl.jsonDecode(
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
+): NullHypothesisProto3
 	local self = NullHypothesisProto3.new()
 
 	return self
@@ -8818,13 +8993,13 @@ function _EnumOnlyProto3Impl.decode(input: buffer): EnumOnlyProto3
 	return self
 end
 
-function _EnumOnlyProto3Impl.jsonEncode(self: EnumOnlyProto3): any
+function _EnumOnlyProto3Impl.jsonEncode(self: EnumOnlyProto3, options: proto.JsonEncodingOptions?): any
 	local output: {} = {}
 
 	return output
 end
 
-function _EnumOnlyProto3Impl.jsonDecode(input: { [string]: any }): EnumOnlyProto3
+function _EnumOnlyProto3Impl.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): EnumOnlyProto3
 	local self = EnumOnlyProto3.new()
 
 	return self
