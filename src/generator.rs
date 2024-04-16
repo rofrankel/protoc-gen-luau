@@ -55,6 +55,12 @@ pub fn generate_response(request: CodeGeneratorRequest) -> CodeGeneratorResponse
         ..Default::default()
     });
 
+    files.push(File {
+        name: Some("proto/type_registry.luau".to_owned()),
+        content: Some(include_str!("./luau/proto/type_registry.luau").to_owned()),
+        ..Default::default()
+    });
+
     files.append(
         &mut request
             .proto_file
@@ -263,15 +269,17 @@ _<name>Impl.descriptor = {
     fullName = "<full_name>",
 }
 
+<any_methods>
+
 <name> = _<name>Impl
 "#;
 
 const JSON: &str = r#"
-function _<name>Impl.jsonEncode(self: <name>): any
+function _<name>Impl.jsonEncode(self: <name>, options: proto.JsonEncodingOptions?): any
     <json_encode>
 end
 
-function _<name>Impl.jsonDecode(input: { [string]: any }): <name>
+function _<name>Impl.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): <name>
     <json_decode>
 end
 "#;
@@ -289,6 +297,59 @@ const ENUM: &str = r#"<name> = {
         <from_name>
     end,
 }"#;
+
+const ANY_METHOD_SIGNATURES: &str = r#"
+-- Pack a message into an Any.
+--
+-- If typePrefix is not provided, defaults to "apis.roblox.com/cloud".
+pack: (payload: Message, typePrefix: string?) -> Any,
+
+-- Returns the message contained by the Any (or nil if the Any is empty).
+unpack: (self: Any) -> Message?,
+
+-- Returns true iff the Any contains an object of the type specified by
+-- typeName. If typeName is a full type URL, it will be compared; otherwise,
+-- only the type name will be compared.
+isA: (self: Any, typeName: string) -> boolean,
+"#;
+
+const ANY_METHODS: &str = r#"
+function _AnyImpl.pack(payload: Message, typePrefix: string?) : Any
+    return Any.new({
+        type_url = (typePrefix or "apis.roblox.com/cloud") .. "/" .. payload.descriptor.fullName,
+        value = payload:encode()
+    })
+end
+
+function _AnyImpl.unpack(self: Any, registry: type_registry.TypeRegistry) : Message?
+    if self.value == nil then
+        return nil
+    end
+
+    local typeName = self.typeUrlToTypeName(self.type_url)
+    local payloadType = registry:findMessage(typeName)
+
+    if payloadType == nil then
+        error('Unknown type: ' .. typeName)
+    end
+
+    return payloadType.decode(self.value)
+end
+
+function _AnyImpl.isA(self: Any, typeName: string) : boolean
+    if self.type_url == typeName then
+        return true
+    end
+
+    local suffix = "/" .. typeName
+    return self.type_url:sub(-#suffix) == suffix
+end
+
+function _AnyImpl.typeUrlToTypeName(typeUrl: string) : string
+    local first, _ = typeUrl:find("([^/]+)$")
+    return typeUrl:sub(first)
+end
+"#;
 
 fn create_decoder(fields: BTreeMap<i32, String>) -> String {
     if fields.is_empty() {
@@ -373,6 +434,21 @@ impl<'a> FileGenerator<'a> {
             "local proto = require({})",
             self.require_path(&proto_require_path)
         ));
+
+        if self.file_descriptor_proto.package() == "google.protobuf"
+            && self
+                .file_descriptor_proto
+                .message_type
+                .iter()
+                .any(|message| message.name() == "Any")
+        {
+            let mut type_registry_require_path = proto_require_path.clone();
+            type_registry_require_path.push("type_registry");
+            contents.push(format!(
+                "local type_registry = require({})",
+                self.require_path(&type_registry_require_path)
+            ));
+        }
 
         for import in &self.file_descriptor_proto.dependency {
             let path_diff = pathdiff::diff_paths(
@@ -489,6 +565,15 @@ impl<'a> FileGenerator<'a> {
         let special_json_type = message_special_json_type(&self.file_descriptor_proto, message);
         let json_type = special_json_type.unwrap_or("{ [string]: any }");
 
+        let is_wkt_any =
+            self.file_descriptor_proto.package() == "google.protobuf" && message.name() == "Any";
+
+        let maybe_any_method_signatures = if is_wkt_any {
+            ANY_METHOD_SIGNATURES
+        } else {
+            ""
+        };
+
         self.types.push(format!(
             r#"type _{name}Impl = {{
                 __index: _{name}Impl,
@@ -498,6 +583,7 @@ impl<'a> FileGenerator<'a> {
                 jsonEncode: (self: {name}) -> {json_type},
                 jsonDecode: (input: {json_type}) -> {name},
                 descriptor: proto.Descriptor,
+                {maybe_any_method_signatures}
             }}
             "#
         ));
@@ -679,6 +765,10 @@ impl<'a> FileGenerator<'a> {
             )
         }
 
+        // Add special methods for google.protobuf.Any: pack, unpack, and isA.
+        final_code =
+            final_code.replace("<any_methods>", if is_wkt_any { ANY_METHODS } else { "" });
+
         self.implementations.push(final_code);
         self.implementations.blank();
 
@@ -803,6 +893,7 @@ impl<'a> FileGenerator<'a> {
 
 fn native_wkt_implementation(name: &str) -> Option<&'static str> {
     match name {
+        "any" => Some(include_str!("./luau/proto/wkt/any.luau")),
         "duration" => Some(include_str!("./luau/proto/wkt/duration.luau")),
         "timestamp" => Some(include_str!("./luau/proto/wkt/timestamp.luau")),
         "struct" => Some(include_str!("./luau/proto/wkt/struct.luau")),
@@ -820,6 +911,7 @@ fn message_special_json_type(
     }
 
     match message.name() {
+        "Any" => Some("{ [string]: any }"),
         "BoolValue" => Some("boolean"),
         "BytesValue" => Some("buffer"),
         "DoubleValue" => Some("number"),
