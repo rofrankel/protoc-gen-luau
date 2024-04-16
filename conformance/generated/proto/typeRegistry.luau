@@ -23,7 +23,7 @@ TypeRegistry.__index = TypeRegistry
 function TypeRegistry.new(types)
   local typeMap: {[string]: table} = {}
   for _, type in pairs(types) do
-    typeMap[type.descriptor.fullName] = type
+    typeMap[type.descriptor().full_name()] = type
   end
 
 	return setmetatable({

@@ -1,10 +1,14 @@
 local base64 = require("./base64")
+local type_registry = require("./type_registry")
 
 local proto = {}
 
-export type Descriptor = {
-	name: string,
-	fullName: string,
+export type JsonEncodingOptions = {
+	registry: type_registry.TypeRegistry,
+}
+
+export type JsonDecodingOptions = {
+	registry: type_registry.TypeRegistry,
 }
 
 export type Message<T> = {
@@ -13,8 +17,8 @@ export type Message<T> = {
 	encode: (T) -> buffer,
 	decode: (buffer) -> T,
 
-	jsonEncode: (T) -> any,
-	jsonDecode: ({ [string]: any }) -> T,
+	jsonEncode: (T, JsonEncodingOptions?) -> any,
+	jsonDecode: ({ [string]: any }, JsonDecodingOptions?) -> T,
 
 	descriptor: Descriptor,
 }

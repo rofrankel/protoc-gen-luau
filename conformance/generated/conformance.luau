@@ -158,7 +158,7 @@ function _FailureSetImpl.decode(input: buffer): FailureSet
 	return self
 end
 
-function _FailureSetImpl.jsonEncode(self: FailureSet): any
+function _FailureSetImpl.jsonEncode(self: FailureSet, options: proto.JsonEncodingOptions?): any
 	local output: {
 		failure: { string }?,
 	} = {}
@@ -174,7 +174,7 @@ function _FailureSetImpl.jsonEncode(self: FailureSet): any
 	return output
 end
 
-function _FailureSetImpl.jsonDecode(input: { [string]: any }): FailureSet
+function _FailureSetImpl.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): FailureSet
 	local self = FailureSet.new()
 
 	if input.failure ~= nil then
@@ -325,7 +325,7 @@ function _ConformanceRequestImpl.decode(input: buffer): ConformanceRequest
 	return self
 end
 
-function _ConformanceRequestImpl.jsonEncode(self: ConformanceRequest): any
+function _ConformanceRequestImpl.jsonEncode(self: ConformanceRequest, options: proto.JsonEncodingOptions?): any
 	local output: {
 		protobufPayload: buffer?,
 		jsonPayload: string?,
@@ -378,7 +378,10 @@ function _ConformanceRequestImpl.jsonEncode(self: ConformanceRequest): any
 	return output
 end
 
-function _ConformanceRequestImpl.jsonDecode(input: { [string]: any }): ConformanceRequest
+function _ConformanceRequestImpl.jsonDecode(
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
+): ConformanceRequest
 	local self = ConformanceRequest.new()
 
 	if input.protobuf_payload ~= nil then
@@ -580,7 +583,7 @@ function _ConformanceResponseImpl.decode(input: buffer): ConformanceResponse
 	return self
 end
 
-function _ConformanceResponseImpl.jsonEncode(self: ConformanceResponse): any
+function _ConformanceResponseImpl.jsonEncode(self: ConformanceResponse, options: proto.JsonEncodingOptions?): any
 	local output: {
 		parseError: string?,
 		serializeError: string?,
@@ -619,7 +622,10 @@ function _ConformanceResponseImpl.jsonEncode(self: ConformanceResponse): any
 	return output
 end
 
-function _ConformanceResponseImpl.jsonDecode(input: { [string]: any }): ConformanceResponse
+function _ConformanceResponseImpl.jsonDecode(
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
+): ConformanceResponse
 	local self = ConformanceResponse.new()
 
 	if input.parse_error ~= nil then
@@ -751,7 +757,7 @@ function _JspbEncodingConfigImpl.decode(input: buffer): JspbEncodingConfig
 	return self
 end
 
-function _JspbEncodingConfigImpl.jsonEncode(self: JspbEncodingConfig): any
+function _JspbEncodingConfigImpl.jsonEncode(self: JspbEncodingConfig, options: proto.JsonEncodingOptions?): any
 	local output: {
 		useJspbArrayAnyFormat: boolean?,
 	} = {}
@@ -763,7 +769,10 @@ function _JspbEncodingConfigImpl.jsonEncode(self: JspbEncodingConfig): any
 	return output
 end
 
-function _JspbEncodingConfigImpl.jsonDecode(input: { [string]: any }): JspbEncodingConfig
+function _JspbEncodingConfigImpl.jsonDecode(
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
+): JspbEncodingConfig
 	local self = JspbEncodingConfig.new()
 
 	if input.use_jspb_array_any_format ~= nil then
