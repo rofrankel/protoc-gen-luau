@@ -10,8 +10,8 @@ type _FieldMaskImpl = {
 	new: () -> FieldMask,
 	encode: (self: FieldMask) -> buffer,
 	decode: (input: buffer) -> FieldMask,
-	jsonEncode: (self: FieldMask) -> { [string]: any },
-	jsonDecode: (input: { [string]: any }) -> FieldMask,
+	jsonEncode: (self: FieldMask, options: proto.JsonEncodingOptions?) -> { [string]: any },
+	jsonDecode: (input: { [string]: any }, options: proto.JsonDecodingOptions?) -> FieldMask,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -75,7 +75,7 @@ function _FieldMaskImpl.decode(input: buffer): FieldMask
 	return self
 end
 
-function _FieldMaskImpl.jsonEncode(self: FieldMask): any
+function _FieldMaskImpl.jsonEncode(self: FieldMask, options: proto.JsonEncodingOptions?): any
 	local output: {
 		paths: { string }?,
 	} = {}
@@ -91,7 +91,7 @@ function _FieldMaskImpl.jsonEncode(self: FieldMask): any
 	return output
 end
 
-function _FieldMaskImpl.jsonDecode(input: { [string]: any }): FieldMask
+function _FieldMaskImpl.jsonDecode(input: { [string]: any }, options: proto.JsonDecodingOptions?): FieldMask
 	local self = FieldMask.new()
 
 	if input.paths ~= nil then

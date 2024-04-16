@@ -10,8 +10,8 @@ type _DoubleValueImpl = {
 	new: () -> DoubleValue,
 	encode: (self: DoubleValue) -> buffer,
 	decode: (input: buffer) -> DoubleValue,
-	jsonEncode: (self: DoubleValue) -> number,
-	jsonDecode: (input: number) -> DoubleValue,
+	jsonEncode: (self: DoubleValue, options: proto.JsonEncodingOptions?) -> number,
+	jsonDecode: (input: number, options: proto.JsonDecodingOptions?) -> DoubleValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -27,8 +27,8 @@ type _FloatValueImpl = {
 	new: () -> FloatValue,
 	encode: (self: FloatValue) -> buffer,
 	decode: (input: buffer) -> FloatValue,
-	jsonEncode: (self: FloatValue) -> number,
-	jsonDecode: (input: number) -> FloatValue,
+	jsonEncode: (self: FloatValue, options: proto.JsonEncodingOptions?) -> number,
+	jsonDecode: (input: number, options: proto.JsonDecodingOptions?) -> FloatValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -44,8 +44,8 @@ type _Int64ValueImpl = {
 	new: () -> Int64Value,
 	encode: (self: Int64Value) -> buffer,
 	decode: (input: buffer) -> Int64Value,
-	jsonEncode: (self: Int64Value) -> number,
-	jsonDecode: (input: number) -> Int64Value,
+	jsonEncode: (self: Int64Value, options: proto.JsonEncodingOptions?) -> number,
+	jsonDecode: (input: number, options: proto.JsonDecodingOptions?) -> Int64Value,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -61,8 +61,8 @@ type _UInt64ValueImpl = {
 	new: () -> UInt64Value,
 	encode: (self: UInt64Value) -> buffer,
 	decode: (input: buffer) -> UInt64Value,
-	jsonEncode: (self: UInt64Value) -> number,
-	jsonDecode: (input: number) -> UInt64Value,
+	jsonEncode: (self: UInt64Value, options: proto.JsonEncodingOptions?) -> number,
+	jsonDecode: (input: number, options: proto.JsonDecodingOptions?) -> UInt64Value,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -78,8 +78,8 @@ type _Int32ValueImpl = {
 	new: () -> Int32Value,
 	encode: (self: Int32Value) -> buffer,
 	decode: (input: buffer) -> Int32Value,
-	jsonEncode: (self: Int32Value) -> number,
-	jsonDecode: (input: number) -> Int32Value,
+	jsonEncode: (self: Int32Value, options: proto.JsonEncodingOptions?) -> number,
+	jsonDecode: (input: number, options: proto.JsonDecodingOptions?) -> Int32Value,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -95,8 +95,8 @@ type _UInt32ValueImpl = {
 	new: () -> UInt32Value,
 	encode: (self: UInt32Value) -> buffer,
 	decode: (input: buffer) -> UInt32Value,
-	jsonEncode: (self: UInt32Value) -> number,
-	jsonDecode: (input: number) -> UInt32Value,
+	jsonEncode: (self: UInt32Value, options: proto.JsonEncodingOptions?) -> number,
+	jsonDecode: (input: number, options: proto.JsonDecodingOptions?) -> UInt32Value,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -112,8 +112,8 @@ type _BoolValueImpl = {
 	new: () -> BoolValue,
 	encode: (self: BoolValue) -> buffer,
 	decode: (input: buffer) -> BoolValue,
-	jsonEncode: (self: BoolValue) -> boolean,
-	jsonDecode: (input: boolean) -> BoolValue,
+	jsonEncode: (self: BoolValue, options: proto.JsonEncodingOptions?) -> boolean,
+	jsonDecode: (input: boolean, options: proto.JsonDecodingOptions?) -> BoolValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -129,8 +129,8 @@ type _StringValueImpl = {
 	new: () -> StringValue,
 	encode: (self: StringValue) -> buffer,
 	decode: (input: buffer) -> StringValue,
-	jsonEncode: (self: StringValue) -> string,
-	jsonDecode: (input: string) -> StringValue,
+	jsonEncode: (self: StringValue, options: proto.JsonEncodingOptions?) -> string,
+	jsonDecode: (input: string, options: proto.JsonDecodingOptions?) -> StringValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
@@ -146,8 +146,8 @@ type _BytesValueImpl = {
 	new: () -> BytesValue,
 	encode: (self: BytesValue) -> buffer,
 	decode: (input: buffer) -> BytesValue,
-	jsonEncode: (self: BytesValue) -> buffer,
-	jsonDecode: (input: buffer) -> BytesValue,
+	jsonEncode: (self: BytesValue, options: proto.JsonEncodingOptions?) -> buffer,
+	jsonDecode: (input: buffer, options: proto.JsonDecodingOptions?) -> BytesValue,
 	descriptor: () -> descriptor.Descriptor,
 }
 
