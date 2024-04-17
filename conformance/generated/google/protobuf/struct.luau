@@ -170,7 +170,7 @@ function _Struct_FieldsEntryImpl.encode(self: Struct_FieldsEntry): buffer
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.lengthDelimited)
 		output, cursor = proto.writeString(output, cursor, self.key)
 	end
@@ -224,7 +224,7 @@ function _Struct_FieldsEntryImpl.jsonEncode(self: Struct_FieldsEntry): any
 		value: Value?,
 	} = {}
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output.key = self.key
 	end
 

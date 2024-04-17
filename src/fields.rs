@@ -204,13 +204,13 @@ impl FieldGenerator<'_> {
                     | Type::Fixed64
                     | Type::Float
                     | Type::Double => {
-                        format!("{this} ~= 0")
+                        format!("{this} ~= nil and {this} ~= 0")
                     }
-                    Type::String => format!("{this} ~= \"\""),
+                    Type::String => format!("{this} and {this} ~= \"\""),
                     Type::Bool => this,
                     Type::Bytes => format!("{this} and buffer.len({this}) > 0"),
                     Type::Enum => format!(
-                        "{this} ~= 0 or {this} ~= {}.fromNumber(0)",
+                        "{this} ~= nil and ({this} ~= 0 or {this} ~= {}.fromNumber(0))",
                         type_definition_of_field_descriptor(field, self.export_map, self.base_file)
                     ),
                     Type::Message => unreachable!("Message has presence"),

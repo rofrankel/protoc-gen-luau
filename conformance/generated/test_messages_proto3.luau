@@ -823,62 +823,62 @@ function _TestAllTypesProto3Impl.encode(self: TestAllTypesProto3): buffer
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.optional_int32 ~= 0 then
+	if self.optional_int32 ~= nil and self.optional_int32 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.optional_int32)
 	end
 
-	if self.optional_int64 ~= 0 then
+	if self.optional_int64 ~= nil and self.optional_int64 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.optional_int64)
 	end
 
-	if self.optional_uint32 ~= 0 then
+	if self.optional_uint32 ~= nil and self.optional_uint32 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 3, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.optional_uint32)
 	end
 
-	if self.optional_uint64 ~= 0 then
+	if self.optional_uint64 ~= nil and self.optional_uint64 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 4, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.optional_uint64)
 	end
 
-	if self.optional_sint32 ~= 0 then
+	if self.optional_sint32 ~= nil and self.optional_sint32 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 5, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, proto.encodeZigZag(self.optional_sint32))
 	end
 
-	if self.optional_sint64 ~= 0 then
+	if self.optional_sint64 ~= nil and self.optional_sint64 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 6, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, proto.encodeZigZag(self.optional_sint64))
 	end
 
-	if self.optional_fixed32 ~= 0 then
+	if self.optional_fixed32 ~= nil and self.optional_fixed32 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 7, proto.wireTypes.i32)
 		output, cursor = proto.writeFixed32(output, cursor, self.optional_fixed32)
 	end
 
-	if self.optional_fixed64 ~= 0 then
+	if self.optional_fixed64 ~= nil and self.optional_fixed64 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 8, proto.wireTypes.i64)
 		output, cursor = proto.writeFixed64(output, cursor, self.optional_fixed64)
 	end
 
-	if self.optional_sfixed32 ~= 0 then
+	if self.optional_sfixed32 ~= nil and self.optional_sfixed32 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 9, proto.wireTypes.i32)
 		output, cursor = proto.writeFixed32(output, cursor, self.optional_sfixed32)
 	end
 
-	if self.optional_sfixed64 ~= 0 then
+	if self.optional_sfixed64 ~= nil and self.optional_sfixed64 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 10, proto.wireTypes.i64)
 		output, cursor = proto.writeFixed64(output, cursor, self.optional_sfixed64)
 	end
 
-	if self.optional_float ~= 0 then
+	if self.optional_float ~= nil and self.optional_float ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 11, proto.wireTypes.i32)
 		output, cursor = proto.writeFloat(output, cursor, self.optional_float)
 	end
 
-	if self.optional_double ~= 0 then
+	if self.optional_double ~= nil and self.optional_double ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 12, proto.wireTypes.i64)
 		output, cursor = proto.writeDouble(output, cursor, self.optional_double)
 	end
@@ -888,7 +888,7 @@ function _TestAllTypesProto3Impl.encode(self: TestAllTypesProto3): buffer
 		output, cursor = proto.writeVarInt(output, cursor, if self.optional_bool then 1 else 0)
 	end
 
-	if self.optional_string ~= "" then
+	if self.optional_string and self.optional_string ~= "" then
 		output, cursor = proto.writeTag(output, cursor, 14, proto.wireTypes.lengthDelimited)
 		output, cursor = proto.writeString(output, cursor, self.optional_string)
 	end
@@ -910,32 +910,41 @@ function _TestAllTypesProto3Impl.encode(self: TestAllTypesProto3): buffer
 		output, cursor = proto.writeBuffer(output, cursor, encoded, buffer.len(encoded))
 	end
 
-	if self.optional_nested_enum ~= 0 or self.optional_nested_enum ~= TestAllTypesProto3_NestedEnum.fromNumber(0) then
+	if
+		self.optional_nested_enum ~= nil
+		and (self.optional_nested_enum ~= 0 or self.optional_nested_enum ~= TestAllTypesProto3_NestedEnum.fromNumber(0))
+	then
 		output, cursor = proto.writeTag(output, cursor, 21, proto.wireTypes.varint)
 		output, cursor =
 			proto.writeVarInt(output, cursor, TestAllTypesProto3_NestedEnum.toNumber(self.optional_nested_enum))
 	end
 
-	if self.optional_foreign_enum ~= 0 or self.optional_foreign_enum ~= ForeignEnum.fromNumber(0) then
+	if
+		self.optional_foreign_enum ~= nil
+		and (self.optional_foreign_enum ~= 0 or self.optional_foreign_enum ~= ForeignEnum.fromNumber(0))
+	then
 		output, cursor = proto.writeTag(output, cursor, 22, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, ForeignEnum.toNumber(self.optional_foreign_enum))
 	end
 
 	if
-		self.optional_aliased_enum ~= 0
-		or self.optional_aliased_enum ~= TestAllTypesProto3_AliasedEnum.fromNumber(0)
+		self.optional_aliased_enum ~= nil
+		and (
+			self.optional_aliased_enum ~= 0
+			or self.optional_aliased_enum ~= TestAllTypesProto3_AliasedEnum.fromNumber(0)
+		)
 	then
 		output, cursor = proto.writeTag(output, cursor, 23, proto.wireTypes.varint)
 		output, cursor =
 			proto.writeVarInt(output, cursor, TestAllTypesProto3_AliasedEnum.toNumber(self.optional_aliased_enum))
 	end
 
-	if self.optional_string_piece ~= "" then
+	if self.optional_string_piece and self.optional_string_piece ~= "" then
 		output, cursor = proto.writeTag(output, cursor, 24, proto.wireTypes.lengthDelimited)
 		output, cursor = proto.writeString(output, cursor, self.optional_string_piece)
 	end
 
-	if self.optional_cord ~= "" then
+	if self.optional_cord and self.optional_cord ~= "" then
 		output, cursor = proto.writeTag(output, cursor, 25, proto.wireTypes.lengthDelimited)
 		output, cursor = proto.writeString(output, cursor, self.optional_cord)
 	end
@@ -1871,7 +1880,13 @@ function _TestAllTypesProto3Impl.encode(self: TestAllTypesProto3): buffer
 		output, cursor = proto.writeBuffer(output, cursor, encoded, buffer.len(encoded))
 	end
 
-	if self.optional_null_value ~= 0 or self.optional_null_value ~= _google_protobuf_struct.NullValue.fromNumber(0) then
+	if
+		self.optional_null_value ~= nil
+		and (
+			self.optional_null_value ~= 0
+			or self.optional_null_value ~= _google_protobuf_struct.NullValue.fromNumber(0)
+		)
+	then
 		output, cursor = proto.writeTag(output, cursor, 307, proto.wireTypes.varint)
 		output, cursor =
 			proto.writeVarInt(output, cursor, _google_protobuf_struct.NullValue.toNumber(self.optional_null_value))
@@ -1933,92 +1948,92 @@ function _TestAllTypesProto3Impl.encode(self: TestAllTypesProto3): buffer
 		end
 	end
 
-	if self.fieldname1 ~= 0 then
+	if self.fieldname1 ~= nil and self.fieldname1 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 401, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.fieldname1)
 	end
 
-	if self.field_name2 ~= 0 then
+	if self.field_name2 ~= nil and self.field_name2 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 402, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.field_name2)
 	end
 
-	if self._field_name3 ~= 0 then
+	if self._field_name3 ~= nil and self._field_name3 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 403, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self._field_name3)
 	end
 
-	if self.field__name4_ ~= 0 then
+	if self.field__name4_ ~= nil and self.field__name4_ ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 404, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.field__name4_)
 	end
 
-	if self.field0name5 ~= 0 then
+	if self.field0name5 ~= nil and self.field0name5 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 405, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.field0name5)
 	end
 
-	if self.field_0_name6 ~= 0 then
+	if self.field_0_name6 ~= nil and self.field_0_name6 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 406, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.field_0_name6)
 	end
 
-	if self.fieldName7 ~= 0 then
+	if self.fieldName7 ~= nil and self.fieldName7 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 407, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.fieldName7)
 	end
 
-	if self.FieldName8 ~= 0 then
+	if self.FieldName8 ~= nil and self.FieldName8 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 408, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.FieldName8)
 	end
 
-	if self.field_Name9 ~= 0 then
+	if self.field_Name9 ~= nil and self.field_Name9 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 409, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.field_Name9)
 	end
 
-	if self.Field_Name10 ~= 0 then
+	if self.Field_Name10 ~= nil and self.Field_Name10 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 410, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.Field_Name10)
 	end
 
-	if self.FIELD_NAME11 ~= 0 then
+	if self.FIELD_NAME11 ~= nil and self.FIELD_NAME11 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 411, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.FIELD_NAME11)
 	end
 
-	if self.FIELD_name12 ~= 0 then
+	if self.FIELD_name12 ~= nil and self.FIELD_name12 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 412, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.FIELD_name12)
 	end
 
-	if self.__field_name13 ~= 0 then
+	if self.__field_name13 ~= nil and self.__field_name13 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 413, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.__field_name13)
 	end
 
-	if self.__Field_name14 ~= 0 then
+	if self.__Field_name14 ~= nil and self.__Field_name14 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 414, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.__Field_name14)
 	end
 
-	if self.field__name15 ~= 0 then
+	if self.field__name15 ~= nil and self.field__name15 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 415, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.field__name15)
 	end
 
-	if self.field__Name16 ~= 0 then
+	if self.field__Name16 ~= nil and self.field__Name16 ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 416, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.field__Name16)
 	end
 
-	if self.field_name17__ ~= 0 then
+	if self.field_name17__ ~= nil and self.field_name17__ ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 417, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.field_name17__)
 	end
 
-	if self.Field_name18__ ~= 0 then
+	if self.Field_name18__ ~= nil and self.Field_name18__ ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 418, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.Field_name18__)
 	end
@@ -3215,51 +3230,51 @@ function _TestAllTypesProto3Impl.jsonEncode(self: TestAllTypesProto3): any
 	} =
 		{}
 
-	if self.optional_int32 ~= 0 then
+	if self.optional_int32 ~= nil and self.optional_int32 ~= 0 then
 		output.optionalInt32 = self.optional_int32
 	end
 
-	if self.optional_int64 ~= 0 then
+	if self.optional_int64 ~= nil and self.optional_int64 ~= 0 then
 		output.optionalInt64 = self.optional_int64
 	end
 
-	if self.optional_uint32 ~= 0 then
+	if self.optional_uint32 ~= nil and self.optional_uint32 ~= 0 then
 		output.optionalUint32 = self.optional_uint32
 	end
 
-	if self.optional_uint64 ~= 0 then
+	if self.optional_uint64 ~= nil and self.optional_uint64 ~= 0 then
 		output.optionalUint64 = self.optional_uint64
 	end
 
-	if self.optional_sint32 ~= 0 then
+	if self.optional_sint32 ~= nil and self.optional_sint32 ~= 0 then
 		output.optionalSint32 = self.optional_sint32
 	end
 
-	if self.optional_sint64 ~= 0 then
+	if self.optional_sint64 ~= nil and self.optional_sint64 ~= 0 then
 		output.optionalSint64 = self.optional_sint64
 	end
 
-	if self.optional_fixed32 ~= 0 then
+	if self.optional_fixed32 ~= nil and self.optional_fixed32 ~= 0 then
 		output.optionalFixed32 = self.optional_fixed32
 	end
 
-	if self.optional_fixed64 ~= 0 then
+	if self.optional_fixed64 ~= nil and self.optional_fixed64 ~= 0 then
 		output.optionalFixed64 = self.optional_fixed64
 	end
 
-	if self.optional_sfixed32 ~= 0 then
+	if self.optional_sfixed32 ~= nil and self.optional_sfixed32 ~= 0 then
 		output.optionalSfixed32 = self.optional_sfixed32
 	end
 
-	if self.optional_sfixed64 ~= 0 then
+	if self.optional_sfixed64 ~= nil and self.optional_sfixed64 ~= 0 then
 		output.optionalSfixed64 = self.optional_sfixed64
 	end
 
-	if self.optional_float ~= 0 then
+	if self.optional_float ~= nil and self.optional_float ~= 0 then
 		output.optionalFloat = proto.json.serializeNumber(self.optional_float)
 	end
 
-	if self.optional_double ~= 0 then
+	if self.optional_double ~= nil and self.optional_double ~= 0 then
 		output.optionalDouble = proto.json.serializeNumber(self.optional_double)
 	end
 
@@ -3267,7 +3282,7 @@ function _TestAllTypesProto3Impl.jsonEncode(self: TestAllTypesProto3): any
 		output.optionalBool = self.optional_bool
 	end
 
-	if self.optional_string ~= "" then
+	if self.optional_string and self.optional_string ~= "" then
 		output.optionalString = self.optional_string
 	end
 
@@ -3283,32 +3298,41 @@ function _TestAllTypesProto3Impl.jsonEncode(self: TestAllTypesProto3): any
 		output.optionalForeignMessage = ForeignMessage.jsonEncode(self.optional_foreign_message)
 	end
 
-	if self.optional_nested_enum ~= 0 or self.optional_nested_enum ~= TestAllTypesProto3_NestedEnum.fromNumber(0) then
+	if
+		self.optional_nested_enum ~= nil
+		and (self.optional_nested_enum ~= 0 or self.optional_nested_enum ~= TestAllTypesProto3_NestedEnum.fromNumber(0))
+	then
 		output.optionalNestedEnum = if typeof(self.optional_nested_enum) == "number"
 			then self.optional_nested_enum
 			else TestAllTypesProto3_NestedEnum.toNumber(self.optional_nested_enum)
 	end
 
-	if self.optional_foreign_enum ~= 0 or self.optional_foreign_enum ~= ForeignEnum.fromNumber(0) then
+	if
+		self.optional_foreign_enum ~= nil
+		and (self.optional_foreign_enum ~= 0 or self.optional_foreign_enum ~= ForeignEnum.fromNumber(0))
+	then
 		output.optionalForeignEnum = if typeof(self.optional_foreign_enum) == "number"
 			then self.optional_foreign_enum
 			else ForeignEnum.toNumber(self.optional_foreign_enum)
 	end
 
 	if
-		self.optional_aliased_enum ~= 0
-		or self.optional_aliased_enum ~= TestAllTypesProto3_AliasedEnum.fromNumber(0)
+		self.optional_aliased_enum ~= nil
+		and (
+			self.optional_aliased_enum ~= 0
+			or self.optional_aliased_enum ~= TestAllTypesProto3_AliasedEnum.fromNumber(0)
+		)
 	then
 		output.optionalAliasedEnum = if typeof(self.optional_aliased_enum) == "number"
 			then self.optional_aliased_enum
 			else TestAllTypesProto3_AliasedEnum.toNumber(self.optional_aliased_enum)
 	end
 
-	if self.optional_string_piece ~= "" then
+	if self.optional_string_piece and self.optional_string_piece ~= "" then
 		output.optionalStringPiece = self.optional_string_piece
 	end
 
-	if self.optional_cord ~= "" then
+	if self.optional_cord and self.optional_cord ~= "" then
 		output.optionalCord = self.optional_cord
 	end
 
@@ -4029,7 +4053,13 @@ function _TestAllTypesProto3Impl.jsonEncode(self: TestAllTypesProto3): any
 		output.optionalValue = _google_protobuf_struct.Value.jsonEncode(self.optional_value)
 	end
 
-	if self.optional_null_value ~= 0 or self.optional_null_value ~= _google_protobuf_struct.NullValue.fromNumber(0) then
+	if
+		self.optional_null_value ~= nil
+		and (
+			self.optional_null_value ~= 0
+			or self.optional_null_value ~= _google_protobuf_struct.NullValue.fromNumber(0)
+		)
+	then
 		output.optionalNullValue = if typeof(self.optional_null_value) == "number"
 			then self.optional_null_value
 			else _google_protobuf_struct.NullValue.toNumber(self.optional_null_value)
@@ -4091,75 +4121,75 @@ function _TestAllTypesProto3Impl.jsonEncode(self: TestAllTypesProto3): any
 		output.repeatedListValue = newOutput
 	end
 
-	if self.fieldname1 ~= 0 then
+	if self.fieldname1 ~= nil and self.fieldname1 ~= 0 then
 		output.fieldname1 = self.fieldname1
 	end
 
-	if self.field_name2 ~= 0 then
+	if self.field_name2 ~= nil and self.field_name2 ~= 0 then
 		output.fieldName2 = self.field_name2
 	end
 
-	if self._field_name3 ~= 0 then
+	if self._field_name3 ~= nil and self._field_name3 ~= 0 then
 		output.FieldName3 = self._field_name3
 	end
 
-	if self.field__name4_ ~= 0 then
+	if self.field__name4_ ~= nil and self.field__name4_ ~= 0 then
 		output.fieldName4 = self.field__name4_
 	end
 
-	if self.field0name5 ~= 0 then
+	if self.field0name5 ~= nil and self.field0name5 ~= 0 then
 		output.field0name5 = self.field0name5
 	end
 
-	if self.field_0_name6 ~= 0 then
+	if self.field_0_name6 ~= nil and self.field_0_name6 ~= 0 then
 		output.field0Name6 = self.field_0_name6
 	end
 
-	if self.fieldName7 ~= 0 then
+	if self.fieldName7 ~= nil and self.fieldName7 ~= 0 then
 		output.fieldName7 = self.fieldName7
 	end
 
-	if self.FieldName8 ~= 0 then
+	if self.FieldName8 ~= nil and self.FieldName8 ~= 0 then
 		output.FieldName8 = self.FieldName8
 	end
 
-	if self.field_Name9 ~= 0 then
+	if self.field_Name9 ~= nil and self.field_Name9 ~= 0 then
 		output.fieldName9 = self.field_Name9
 	end
 
-	if self.Field_Name10 ~= 0 then
+	if self.Field_Name10 ~= nil and self.Field_Name10 ~= 0 then
 		output.FieldName10 = self.Field_Name10
 	end
 
-	if self.FIELD_NAME11 ~= 0 then
+	if self.FIELD_NAME11 ~= nil and self.FIELD_NAME11 ~= 0 then
 		output.FIELDNAME11 = self.FIELD_NAME11
 	end
 
-	if self.FIELD_name12 ~= 0 then
+	if self.FIELD_name12 ~= nil and self.FIELD_name12 ~= 0 then
 		output.FIELDName12 = self.FIELD_name12
 	end
 
-	if self.__field_name13 ~= 0 then
+	if self.__field_name13 ~= nil and self.__field_name13 ~= 0 then
 		output.FieldName13 = self.__field_name13
 	end
 
-	if self.__Field_name14 ~= 0 then
+	if self.__Field_name14 ~= nil and self.__Field_name14 ~= 0 then
 		output.FieldName14 = self.__Field_name14
 	end
 
-	if self.field__name15 ~= 0 then
+	if self.field__name15 ~= nil and self.field__name15 ~= 0 then
 		output.fieldName15 = self.field__name15
 	end
 
-	if self.field__Name16 ~= 0 then
+	if self.field__Name16 ~= nil and self.field__Name16 ~= 0 then
 		output.fieldName16 = self.field__Name16
 	end
 
-	if self.field_name17__ ~= 0 then
+	if self.field_name17__ ~= nil and self.field_name17__ ~= 0 then
 		output.fieldName17 = self.field_name17__
 	end
 
-	if self.Field_name18__ ~= 0 then
+	if self.Field_name18__ ~= nil and self.Field_name18__ ~= 0 then
 		output.FieldName18 = self.Field_name18__
 	end
 
@@ -6317,7 +6347,7 @@ function _TestAllTypesProto3_NestedMessageImpl.encode(self: TestAllTypesProto3_N
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.a ~= 0 then
+	if self.a ~= nil and self.a ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.a)
 	end
@@ -6371,7 +6401,7 @@ function _TestAllTypesProto3_NestedMessageImpl.jsonEncode(self: TestAllTypesProt
 		corecursive: TestAllTypesProto3?,
 	} = {}
 
-	if self.a ~= 0 then
+	if self.a ~= nil and self.a ~= 0 then
 		output.a = self.a
 	end
 
@@ -6419,12 +6449,12 @@ function _TestAllTypesProto3_MapInt32Int32EntryImpl.encode(self: TestAllTypesPro
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.value)
 	end
@@ -6472,11 +6502,11 @@ function _TestAllTypesProto3_MapInt32Int32EntryImpl.jsonEncode(self: TestAllType
 		value: number?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = self.value
 	end
 
@@ -6522,12 +6552,12 @@ function _TestAllTypesProto3_MapInt64Int64EntryImpl.encode(self: TestAllTypesPro
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.value)
 	end
@@ -6575,11 +6605,11 @@ function _TestAllTypesProto3_MapInt64Int64EntryImpl.jsonEncode(self: TestAllType
 		value: number?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = self.value
 	end
 
@@ -6625,12 +6655,12 @@ function _TestAllTypesProto3_MapUint32Uint32EntryImpl.encode(self: TestAllTypesP
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.value)
 	end
@@ -6678,11 +6708,11 @@ function _TestAllTypesProto3_MapUint32Uint32EntryImpl.jsonEncode(self: TestAllTy
 		value: number?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = self.value
 	end
 
@@ -6728,12 +6758,12 @@ function _TestAllTypesProto3_MapUint64Uint64EntryImpl.encode(self: TestAllTypesP
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.value)
 	end
@@ -6781,11 +6811,11 @@ function _TestAllTypesProto3_MapUint64Uint64EntryImpl.jsonEncode(self: TestAllTy
 		value: number?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = self.value
 	end
 
@@ -6831,12 +6861,12 @@ function _TestAllTypesProto3_MapSint32Sint32EntryImpl.encode(self: TestAllTypesP
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, proto.encodeZigZag(self.key))
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, proto.encodeZigZag(self.value))
 	end
@@ -6884,11 +6914,11 @@ function _TestAllTypesProto3_MapSint32Sint32EntryImpl.jsonEncode(self: TestAllTy
 		value: number?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = self.value
 	end
 
@@ -6934,12 +6964,12 @@ function _TestAllTypesProto3_MapSint64Sint64EntryImpl.encode(self: TestAllTypesP
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, proto.encodeZigZag(self.key))
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, proto.encodeZigZag(self.value))
 	end
@@ -6987,11 +7017,11 @@ function _TestAllTypesProto3_MapSint64Sint64EntryImpl.jsonEncode(self: TestAllTy
 		value: number?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = self.value
 	end
 
@@ -7037,12 +7067,12 @@ function _TestAllTypesProto3_MapFixed32Fixed32EntryImpl.encode(self: TestAllType
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.i32)
 		output, cursor = proto.writeFixed32(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.i32)
 		output, cursor = proto.writeFixed32(output, cursor, self.value)
 	end
@@ -7090,11 +7120,11 @@ function _TestAllTypesProto3_MapFixed32Fixed32EntryImpl.jsonEncode(self: TestAll
 		value: number?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = self.value
 	end
 
@@ -7140,12 +7170,12 @@ function _TestAllTypesProto3_MapFixed64Fixed64EntryImpl.encode(self: TestAllType
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.i64)
 		output, cursor = proto.writeFixed64(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.i64)
 		output, cursor = proto.writeFixed64(output, cursor, self.value)
 	end
@@ -7193,11 +7223,11 @@ function _TestAllTypesProto3_MapFixed64Fixed64EntryImpl.jsonEncode(self: TestAll
 		value: number?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = self.value
 	end
 
@@ -7245,12 +7275,12 @@ function _TestAllTypesProto3_MapSfixed32Sfixed32EntryImpl.encode(
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.i32)
 		output, cursor = proto.writeFixed32(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.i32)
 		output, cursor = proto.writeFixed32(output, cursor, self.value)
 	end
@@ -7302,11 +7332,11 @@ function _TestAllTypesProto3_MapSfixed32Sfixed32EntryImpl.jsonEncode(
 		value: number?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = self.value
 	end
 
@@ -7354,12 +7384,12 @@ function _TestAllTypesProto3_MapSfixed64Sfixed64EntryImpl.encode(
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.i64)
 		output, cursor = proto.writeFixed64(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.i64)
 		output, cursor = proto.writeFixed64(output, cursor, self.value)
 	end
@@ -7411,11 +7441,11 @@ function _TestAllTypesProto3_MapSfixed64Sfixed64EntryImpl.jsonEncode(
 		value: number?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = self.value
 	end
 
@@ -7461,12 +7491,12 @@ function _TestAllTypesProto3_MapInt32FloatEntryImpl.encode(self: TestAllTypesPro
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.i32)
 		output, cursor = proto.writeFloat(output, cursor, self.value)
 	end
@@ -7514,11 +7544,11 @@ function _TestAllTypesProto3_MapInt32FloatEntryImpl.jsonEncode(self: TestAllType
 		value: (number | string)?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = proto.json.serializeNumber(self.value)
 	end
 
@@ -7564,12 +7594,12 @@ function _TestAllTypesProto3_MapInt32DoubleEntryImpl.encode(self: TestAllTypesPr
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.i64)
 		output, cursor = proto.writeDouble(output, cursor, self.value)
 	end
@@ -7617,11 +7647,11 @@ function _TestAllTypesProto3_MapInt32DoubleEntryImpl.jsonEncode(self: TestAllTyp
 		value: (number | string)?,
 	} = {}
 
-	if self.key ~= 0 then
+	if self.key ~= nil and self.key ~= 0 then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 then
+	if self.value ~= nil and self.value ~= 0 then
 		output.value = proto.json.serializeNumber(self.value)
 	end
 
@@ -7770,12 +7800,12 @@ function _TestAllTypesProto3_MapStringStringEntryImpl.encode(self: TestAllTypesP
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.lengthDelimited)
 		output, cursor = proto.writeString(output, cursor, self.key)
 	end
 
-	if self.value ~= "" then
+	if self.value and self.value ~= "" then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.lengthDelimited)
 		output, cursor = proto.writeString(output, cursor, self.value)
 	end
@@ -7823,11 +7853,11 @@ function _TestAllTypesProto3_MapStringStringEntryImpl.jsonEncode(self: TestAllTy
 		value: string?,
 	} = {}
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output.key = self.key
 	end
 
-	if self.value ~= "" then
+	if self.value and self.value ~= "" then
 		output.value = self.value
 	end
 
@@ -7873,7 +7903,7 @@ function _TestAllTypesProto3_MapStringBytesEntryImpl.encode(self: TestAllTypesPr
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.lengthDelimited)
 		output, cursor = proto.writeString(output, cursor, self.key)
 	end
@@ -7926,7 +7956,7 @@ function _TestAllTypesProto3_MapStringBytesEntryImpl.jsonEncode(self: TestAllTyp
 		value: buffer?,
 	} = {}
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output.key = self.key
 	end
 
@@ -7978,7 +8008,7 @@ function _TestAllTypesProto3_MapStringNestedMessageEntryImpl.encode(
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.lengthDelimited)
 		output, cursor = proto.writeString(output, cursor, self.key)
 	end
@@ -8036,7 +8066,7 @@ function _TestAllTypesProto3_MapStringNestedMessageEntryImpl.jsonEncode(
 		value: TestAllTypesProto3_NestedMessage?,
 	} = {}
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output.key = self.key
 	end
 
@@ -8088,7 +8118,7 @@ function _TestAllTypesProto3_MapStringForeignMessageEntryImpl.encode(
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.lengthDelimited)
 		output, cursor = proto.writeString(output, cursor, self.key)
 	end
@@ -8146,7 +8176,7 @@ function _TestAllTypesProto3_MapStringForeignMessageEntryImpl.jsonEncode(
 		value: ForeignMessage?,
 	} = {}
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output.key = self.key
 	end
 
@@ -8200,12 +8230,12 @@ function _TestAllTypesProto3_MapStringNestedEnumEntryImpl.encode(
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.lengthDelimited)
 		output, cursor = proto.writeString(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 or self.value ~= TestAllTypesProto3_NestedEnum.fromNumber(0) then
+	if self.value ~= nil and (self.value ~= 0 or self.value ~= TestAllTypesProto3_NestedEnum.fromNumber(0)) then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, TestAllTypesProto3_NestedEnum.toNumber(self.value))
 	end
@@ -8257,11 +8287,11 @@ function _TestAllTypesProto3_MapStringNestedEnumEntryImpl.jsonEncode(
 		value: TestAllTypesProto3_NestedEnum?,
 	} = {}
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 or self.value ~= TestAllTypesProto3_NestedEnum.fromNumber(0) then
+	if self.value ~= nil and (self.value ~= 0 or self.value ~= TestAllTypesProto3_NestedEnum.fromNumber(0)) then
 		output.value = if typeof(self.value) == "number"
 			then self.value
 			else TestAllTypesProto3_NestedEnum.toNumber(self.value)
@@ -8313,12 +8343,12 @@ function _TestAllTypesProto3_MapStringForeignEnumEntryImpl.encode(
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.lengthDelimited)
 		output, cursor = proto.writeString(output, cursor, self.key)
 	end
 
-	if self.value ~= 0 or self.value ~= ForeignEnum.fromNumber(0) then
+	if self.value ~= nil and (self.value ~= 0 or self.value ~= ForeignEnum.fromNumber(0)) then
 		output, cursor = proto.writeTag(output, cursor, 2, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, ForeignEnum.toNumber(self.value))
 	end
@@ -8370,11 +8400,11 @@ function _TestAllTypesProto3_MapStringForeignEnumEntryImpl.jsonEncode(
 		value: ForeignEnum?,
 	} = {}
 
-	if self.key ~= "" then
+	if self.key and self.key ~= "" then
 		output.key = self.key
 	end
 
-	if self.value ~= 0 or self.value ~= ForeignEnum.fromNumber(0) then
+	if self.value ~= nil and (self.value ~= 0 or self.value ~= ForeignEnum.fromNumber(0)) then
 		output.value = if typeof(self.value) == "number" then self.value else ForeignEnum.toNumber(self.value)
 	end
 
@@ -8513,7 +8543,7 @@ function _ForeignMessageImpl.encode(self: ForeignMessage): buffer
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if self.c ~= 0 then
+	if self.c ~= nil and self.c ~= 0 then
 		output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.varint)
 		output, cursor = proto.writeVarInt(output, cursor, self.c)
 	end
@@ -8556,7 +8586,7 @@ function _ForeignMessageImpl.jsonEncode(self: ForeignMessage): any
 		c: number?,
 	} = {}
 
-	if self.c ~= 0 then
+	if self.c ~= nil and self.c ~= 0 then
 		output.c = self.c
 	end
 
