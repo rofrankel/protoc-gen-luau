@@ -183,11 +183,11 @@ impl FieldGenerator<'_> {
 
             FieldKind::Single(field) => {
                 if self.map_type().is_some() {
-                    return format!("next({this}) ~= nil");
+                    return format!("{this} and next({this}) ~= nil");
                 }
 
                 if field.label.is_some() && field.label() == Label::Repeated {
-                    return format!("#{this} > 0");
+                    return format!("{this} and #{this} > 0");
                 }
 
                 // TODO: Remove default branch and explicitly type everything out
@@ -208,7 +208,7 @@ impl FieldGenerator<'_> {
                     }
                     Type::String => format!("{this} ~= \"\""),
                     Type::Bool => this,
-                    Type::Bytes => format!("buffer.len({this}) > 0"),
+                    Type::Bytes => format!("{this} and buffer.len({this}) > 0"),
                     Type::Enum => format!(
                         "{this} ~= 0 or {this} ~= {}.fromNumber(0)",
                         type_definition_of_field_descriptor(field, self.export_map, self.base_file)

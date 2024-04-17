@@ -118,7 +118,7 @@ function _FailureSetImpl.encode(self: FailureSet): buffer
 	local output = buffer.create(0)
 	local cursor = 0
 
-	if #self.failure > 0 then
+	if self.failure and #self.failure > 0 then
 		for _, value: string in self.failure do
 			output, cursor = proto.writeTag(output, cursor, 1, proto.wireTypes.lengthDelimited)
 			output, cursor = proto.writeString(output, cursor, value)
@@ -163,7 +163,7 @@ function _FailureSetImpl.jsonEncode(self: FailureSet): any
 		failure: { string }?,
 	} = {}
 
-	if #self.failure > 0 then
+	if self.failure and #self.failure > 0 then
 		local newOutput: { string } = {}
 		for _, value: string in self.failure do
 			table.insert(newOutput, value)
