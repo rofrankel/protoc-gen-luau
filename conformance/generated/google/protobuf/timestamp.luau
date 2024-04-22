@@ -110,6 +110,9 @@ end
 
 function _TimestampImpl.jsonEncode(timestamp: Timestamp): string
 	local dateInfo = os.date("!*t", timestamp.seconds or 0)
+	if dateInfo == nil then
+		error("Invalid date provided")
+	end
 	return string.format(
 		"%04d-%02d-%02dT%02d:%02d:%02d%sZ",
 		dateInfo.year,
