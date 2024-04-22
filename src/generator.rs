@@ -282,6 +282,8 @@ _<name>Impl.descriptor = {
     fullName = "<full_name>",
 }
 
+<any_methods>
+
 <name> = _<name>Impl
 
 typeRegistry.default:register(<name>)
@@ -310,6 +312,66 @@ const ENUM: &str = r#"<name> = {
         <from_name>
     end,
 }"#;
+
+const ANY_METHOD_SIGNATURES: &str = r#"
+-- Pack a message into an Any.
+--
+-- If typePrefix is not provided, defaults to "apis.roblox.com/cloud".
+pack: (payload: Message, typePrefix: string?) -> Any,
+
+-- Returns the message contained by the Any (or nil if the Any is empty).
+unpack: (self: Any, registry: typeRegistry.TypeRegistry?) -> Message?,
+
+-- Returns true iff the Any contains an object of the type specified by
+-- typeName. If typeName is a full type URL, it will be compared; otherwise,
+-- only the type name will be compared.
+isA: (self: Any, typeName: string) -> boolean,
+"#;
+
+const ANY_METHODS: &str = r#"
+function _AnyImpl.pack(payload: Message, typePrefix: string?) : Any
+    return Any.new({
+        type_url = (typePrefix or "apis.roblox.com/cloud") .. "/" .. payload.descriptor.fullName,
+        value = payload:encode()
+    })
+end
+
+function _AnyImpl.unpack(self: Any, registry: typeRegistry.TypeRegistry?) : Message?
+    if self.value == nil then
+        return nil
+    end
+
+    if registry == nil then
+        registry = typeRegistry.default
+    end
+
+    local typeName = _AnyImpl.typeUrlToTypeName(self.type_url)
+    local payloadType = (registry::typeRegistry.TypeRegistry):findMessage(typeName)
+
+    if payloadType == nil then
+        error('Unknown type: ' .. typeName)
+    end
+
+    return payloadType.decode(self.value)
+end
+
+function _AnyImpl.isA(self: Any, typeName: string) : boolean
+    if self.type_url == typeName then
+        return true
+    end
+
+    local suffix = "/" .. typeName
+    return self.type_url:sub(-#suffix) == suffix
+end
+
+function _AnyImpl.typeUrlToTypeName(typeUrl: string) : string
+    local first, _ = typeUrl:find("([^/]+)$")
+    if first == nil then
+        error("Invalid type URL: " .. typeUrl)
+    end
+    return typeUrl:sub(first)
+end
+"#;
 
 fn create_decoder(fields: BTreeMap<i32, String>) -> String {
     if fields.is_empty() {
@@ -509,6 +571,15 @@ impl<'a> FileGenerator<'a> {
             None => "{ [string]: any }",
         };
 
+        let is_wkt_any =
+            self.file_descriptor_proto.package() == "google.protobuf" && message.name() == "Any";
+
+        let maybe_any_method_signatures = if is_wkt_any {
+            ANY_METHOD_SIGNATURES
+        } else {
+            ""
+        };
+
         self.types.push(format!(
             r#"type _{name}Impl = {{
                 __index: _{name}Impl,
@@ -518,6 +589,7 @@ impl<'a> FileGenerator<'a> {
                 jsonEncode: (self: {name}) -> {json_type},
                 jsonDecode: (input: {json_type}) -> {name},
                 descriptor: proto.Descriptor,
+                {maybe_any_method_signatures}
             }}
             "#
         ));
@@ -721,6 +793,9 @@ impl<'a> FileGenerator<'a> {
                     ),
             )
         }
+
+        // Add special methods for google.protobuf.Any: pack, unpack, and isA.
+        final_code = final_code.replace("<any_methods>", if is_wkt_any { ANY_METHODS } else { "" });
 
         self.implementations.push(final_code);
         self.implementations.blank();
