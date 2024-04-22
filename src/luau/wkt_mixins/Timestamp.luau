@@ -18,7 +18,13 @@ local function deserializeFractionalNanos(nanosText: string): number
 end
 
 function _TimestampImpl.jsonEncode(timestamp: Timestamp): string
+	if timestamp.seconds > 253402322399 then
+		error("Invalid timestamp provided: years after 9999 are not supported")
+	end
 	local dateInfo = os.date("!*t", timestamp.seconds or 0)
+	if dateInfo == nil then
+		error("Invalid date provided")
+	end
 	return string.format(
 		"%04d-%02d-%02dT%02d:%02d:%02d%sZ",
 		dateInfo.year,
