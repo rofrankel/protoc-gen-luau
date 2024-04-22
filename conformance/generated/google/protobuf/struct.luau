@@ -267,7 +267,7 @@ function _Struct_FieldsEntryImpl.decode(input: buffer): Struct_FieldsEntry
 	return self
 end
 
-function _Struct_FieldsEntryImpl.jsonEncode(self: Struct_FieldsEntry): any
+function _Struct_FieldsEntryImpl.jsonEncode(self: Struct_FieldsEntry, options: proto.JsonEncodingOptions?): any
 	local output: {
 		key: string?,
 		value: Value?,
@@ -284,7 +284,10 @@ function _Struct_FieldsEntryImpl.jsonEncode(self: Struct_FieldsEntry): any
 	return output
 end
 
-function _Struct_FieldsEntryImpl.jsonDecode(input: { [string]: any }): Struct_FieldsEntry
+function _Struct_FieldsEntryImpl.jsonDecode(
+	input: { [string]: any },
+	options: proto.JsonDecodingOptions?
+): Struct_FieldsEntry
 	local self = Struct_FieldsEntry.new()
 
 	if input.key ~= nil then
