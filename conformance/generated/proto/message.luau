@@ -3,14 +3,22 @@ export type Descriptor = {
 	fullName: string,
 }
 
+export type JsonEncodingOptions = {
+	registry: type_registry.TypeRegistry,
+}
+
+export type JsonDecodingOptions = {
+	registry: type_registry.TypeRegistry,
+}
+
 export type Message<T, Fields> = {
 	new: (fields: Fields?) -> T,
 
 	encode: (T) -> buffer,
 	decode: (buffer) -> T,
 
-	jsonEncode: (T) -> any,
-	jsonDecode: ({ [string]: any }) -> T,
+	jsonEncode: (T, JsonEncodingOptions?) -> any,
+	jsonDecode: ({ [string]: any }, JsonDecodingOptions?) -> T,
 
 	descriptor: Descriptor,
 }

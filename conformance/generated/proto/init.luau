@@ -1,9 +1,13 @@
 local base64 = require("./base64")
 local message = require("./message")
+local typeRegistry = require("./type_registry")
 
 export type Descriptor = message.Descriptor
 export type Message<T, Fields> = message.Message<T, Fields>
 export type CustomJson<T, Json> = message.CustomJson<T, Json>
+export type JsonEncodingOptions = message.JsonEncodingOptions
+export type JsonDecodingOptions = message.JsonDecodingOptions
+export type TypeRegistry = typeRegistry.TypeRegistry
 
 local proto = {}
 

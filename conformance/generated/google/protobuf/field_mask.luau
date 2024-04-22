@@ -10,8 +10,8 @@ type _FieldMaskImpl = {
 	new: (fields: _FieldMaskPartialFields?) -> FieldMask,
 	encode: (self: FieldMask) -> buffer,
 	decode: (input: buffer) -> FieldMask,
-	jsonEncode: (self: FieldMask) -> string,
-	jsonDecode: (input: string) -> FieldMask,
+	jsonEncode: (self: FieldMask, options: proto.JsonEncodingOptions?) -> string,
+	jsonDecode: (input: string, options: proto.JsonDecodingOptions?) -> FieldMask,
 	descriptor: proto.Descriptor,
 }
 
