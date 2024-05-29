@@ -1,9 +1,12 @@
 --!strict
+local proto = require(".")
+local typeRegistry = require("./typeRegistry")
+
 local wktJson = {}
 
 export type WellKnownType<T, TSerialized> = {
 	serialize: (T) -> TSerialized,
-	deserialize: (TSerialized) -> T,
+	deserialize: <M>(TSerialized, new: (T) -> M, options: proto.JsonDecodingOptions?) -> M,
 }
 
 local function serializeFractionalNanos(nanos: number): string
@@ -30,7 +33,7 @@ type Duration = {
 	nanos: number,
 }
 wktJson.Duration = {
-	serialize = function(duration: Duration): string
+	serialize = function(duration: Duration, options: proto.JsonEncodingOptions?): string
 		assert(
 			duration.seconds == nil or (duration.seconds >= -315576000000 and duration.seconds <= 315576000000),
 			"Seconds out of range"
@@ -49,7 +52,7 @@ wktJson.Duration = {
 		return string.format("%s%d%s", nanoSign, duration.seconds or 0, serializeFractionalNanos(duration.nanos))
 	end,
 
-	deserialize = function(durationString: string): Duration
+	deserialize = function<M>(durationString: string, new: (Duration) -> M, options: proto.JsonDecodingOptions?): M
 		local simpleSecondsText = string.match(durationString, "^([%-0-9]+)s$")
 		if simpleSecondsText ~= nil then
 			local simpleSeconds = assert(
@@ -57,10 +60,10 @@ wktJson.Duration = {
 				"Invalid duration string received--was formatted as just having seconds, but wasn't a properly formatted int"
 			)
 
-			return {
+			return new({
 				seconds = simpleSeconds,
 				nanos = 0,
-			}
+			})
 		end
 
 		local secondsText, nanosText = string.match(durationString, "^([%-0-9]+)%.([0-9]+)s$")
@@ -80,7 +83,7 @@ type Timestamp = {
 	nanos: number,
 }
 wktJson.Timestamp = {
-	serialize = function(timestamp: Timestamp): string
+	serialize = function(timestamp: Timestamp, options: proto.JsonEncodingOptions?): string
 		local dateInfo = os.date("!*t", timestamp.seconds or 0)
 		return string.format(
 			"%04d-%02d-%02dT%02d:%02d:%02d%sZ",
@@ -94,7 +97,7 @@ wktJson.Timestamp = {
 		)
 	end,
 
-	deserialize = function(text: string): Timestamp
+	deserialize = function<M>(text: string, new: (Timestamp) -> M, options: proto.JsonDecodingOptions?): M
 		local year, month, day, hour, min, sec, nanosWithDot =
 			string.match(text, "^([0-9]+)-([0-9]+)-([0-9]+)T([0-9]+):([0-9]+):([0-9]+)(.*)Z$")
 
@@ -129,24 +132,24 @@ wktJson.Timestamp = {
 			sec = assert(tonumber(sec), "Invalid formatted sec"),
 		})
 
-		return {
+		return new({
 			seconds = totalSeconds,
 			nanos = nanos,
-		}
+		})
 	end,
 } :: WellKnownType<Timestamp, string>
 
 type RawValue<T> = WellKnownType<{ value: T }, T>
 local function createRawValue<T>(): RawValue<T>
 	return {
-		serialize = function(input: { value: T }): T
+		serialize = function(input: { value: T }, options: proto.JsonEncodingOptions?): T
 			return input.value
 		end,
 
-		deserialize = function(value: T): { value: T }
-			return {
+		deserialize = function<M>(value: T, new: (T) -> M, options: proto.JsonDecodingOptions?): M
+			return new({
 				value = value,
-			}
+			})
 		end,
 	}
 end
@@ -188,7 +191,7 @@ wktJson.ListValue = {} :: WellKnownType<ListValue, { any }>
 wktJson.Struct = {} :: WellKnownType<Struct, { [string]: any }>
 
 wktJson.Value = {
-	serialize = function(input: Value)
+	serialize = function(input: Value, options: proto.JsonEncodingOptions?)
 		local kind = input.kind
 
 		if kind == nil or kind.type == "null_value" then
@@ -205,15 +208,15 @@ wktJson.Value = {
 		end
 	end,
 
-	deserialize = function(input: any): Value
+	deserialize = function<M>(input: any, new: (Value) -> M, options: proto.JsonDecodingOptions?): M
 		if input == nil then
-			return { kind = { type = "null_value", value = "NULL_VALUE" } }
+			return new({ kind = { type = "null_value", value = "NULL_VALUE" } })
 		elseif typeof(input) == "number" then
-			return { kind = { type = "number_value", value = input } }
+			return new({ kind = { type = "number_value", value = input } })
 		elseif typeof(input) == "string" then
-			return { kind = { type = "string_value", value = input } }
+			return new({ kind = { type = "string_value", value = input } })
 		elseif typeof(input) == "boolean" then
-			return { kind = { type = "bool_value", value = input } }
+			return new({ kind = { type = "bool_value", value = input } })
 		elseif typeof(input) == "table" then
 			local isArray = true
 			local count = 0
@@ -228,9 +231,9 @@ wktJson.Value = {
 			isArray = count == #input
 
 			if isArray then
-				return { kind = { type = "list_value", value = wktJson.ListValue.deserialize(input) } }
+				return new({ kind = { type = "list_value", value = wktJson.ListValue.deserialize(input) } })
 			else
-				return { kind = { type = "struct_value", value = wktJson.Struct.deserialize(input) } }
+				return new({ kind = { type = "struct_value", value = wktJson.Struct.deserialize(input) } })
 			end
 		else
 			error(`Unknown input type: {typeof(input)}`)
@@ -242,7 +245,7 @@ type Struct = {
 	fields: { [string]: Value },
 }
 wktJson.Struct = {
-	serialize = function(struct: Struct): { [string]: any }
+	serialize = function(struct: Struct, options: proto.JsonEncodingOptions?): { [string]: any }
 		local serialized = {}
 
 		for key, value in struct.fields do
@@ -252,16 +255,16 @@ wktJson.Struct = {
 		return serialized
 	end,
 
-	deserialize = function(input: { [string]: any }): Struct
+	deserialize = function<M>(input: { [string]: any }, new: (Struct) -> M, options: proto.JsonDecodingOptions?): M
 		local fields = {}
 
 		for key, serializedValue in input do
 			fields[key] = wktJson.Value.deserialize(serializedValue)
 		end
 
-		return {
+		return new({
 			fields = fields,
-		}
+		})
 	end,
 }
 
@@ -269,7 +272,7 @@ type ListValue = {
 	values: { Value },
 }
 wktJson.ListValue = {
-	serialize = function(list: ListValue): { any }
+	serialize = function(list: ListValue, options: proto.JsonEncodingOptions?): { any }
 		local serialized = {}
 
 		for _, value in list.values do
@@ -279,17 +282,71 @@ wktJson.ListValue = {
 		return serialized
 	end,
 
-	deserialize = function(input: { any }): ListValue
+	deserialize = function<M>(input: { any }, new: (ListValue) -> M, options: proto.JsonDecodingOptions?): M
 		local values = {}
 
 		for _, value in input do
 			table.insert(values, wktJson.Value.deserialize(value))
 		end
 
-		return {
+		return new({
 			values = values,
-		}
+		})
 	end,
 } :: WellKnownType<ListValue, { any }>
+
+type Any = {
+	type_url: string,
+	value: buffer,
+}
+wktJson.Any = {
+	serialize = function(input: Any, options: proto.JsonEncodingOptions?): { [string]: any }
+		if not (options and options.registry) then
+			error("Type registry must be provided to serialize Any")
+		end
+
+		local json = input:unpack(options.registry):jsonEncode(options)
+
+		if (typeof(json) == "string") then
+			return { ["@type"] = input.type_url, ["value"] = json }
+		end
+
+		json["@type"] = input.type_url
+
+		return json
+	end,
+
+	deserialize = function<M>(input: { [string]: any }, new: (ListValue) -> M, options: proto.JsonDecodingOptions?): Any
+		if not (options and options.registry) then
+			error("Type registry must be provided to serialize Any")
+		end
+
+		local typeUrl = input["@type"]
+		local typeName = typeUrl:sub(typeUrl:find("([^/]+)$"))
+		local payloadType = options.registry:findMessage(typeName)
+
+		if payloadType == nil then
+			error("Could not find message type for Any")
+		end
+
+		local typePrefix = typeUrl:sub(0, #typeUrl - #typeName - 1)
+
+		local json = input
+		-- For WKTs with special JSON representations, we need to decode input["value"] rather than
+		-- input.
+		local gpb = "google.protobuf."
+		if typeName:sub(0, #gpb) == gpb and input["value"] then
+			json = input["value"]
+		else
+			-- Clear this because it's not part of the JSON encoding of the payload itself.
+			json["@type"] = nil
+		end
+
+		return new(pack(
+			payloadType.jsonDecode(json, options):pack(payloadType, typePrefix)
+		))
+	end,
+} :: WellKnownType<Any, { [string]: any }>
+
 
 return wktJson
